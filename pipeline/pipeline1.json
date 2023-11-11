@@ -640,13 +640,12 @@
 						"preferredRegions": []
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "JsonSink",
 						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings",
-							"copyBehavior": "FlattenHierarchy"
+							"type": "AzureBlobStorageWriteSettings"
 						},
 						"formatSettings": {
-							"type": "ParquetWriteSettings"
+							"type": "JsonWriteSettings"
 						}
 					},
 					"enableStaging": false,
@@ -660,7 +659,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet4",
+						"referenceName": "Json1",
 						"type": "DatasetReference"
 					}
 				]
