@@ -13,6 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "vm_country.parquet",
 				"fileSystem": "vm-data"
 			},
 			"compressionCodec": "snappy"

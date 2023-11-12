@@ -13,6 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "sql_metrics.parquet",
 				"fileSystem": "sql-database"
 			},
 			"compressionCodec": "snappy"
