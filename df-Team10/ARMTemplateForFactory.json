@@ -889,7 +889,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
+								"type": "SqlServerSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -1089,7 +1089,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SQL_Metrics_Table",
+								"referenceName": "VM_Metrics_Table",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1533,6 +1533,7 @@
 				"[concat(variables('factoryId'), '/datasets/SQL_Dates_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_Table')]",
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Country_Table')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Country_PQ')]",
