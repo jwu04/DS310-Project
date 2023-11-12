@@ -876,7 +876,7 @@
 						]
 					},
 					{
-						"name": "Copy VM Country",
+						"name": "Copy VM Metrics",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -889,7 +889,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlServerSource",
+								"type": "AzureSqlSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -969,25 +969,25 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VM_Country_Table",
+								"referenceName": "SQL_Metrics_Table",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "VM_Country_PQ",
+								"referenceName": "VM_Metrics_PQ",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
 					},
 					{
-						"name": "Copy VM Metrics",
+						"name": "Copy VM Country",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Copy VM Country",
+								"activity": "Copy VM Metrics",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1203,14 +1203,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "VM_Metrics_Table",
+								"referenceName": "VM_Country_Table",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "VM_Metrics_PQ",
+								"referenceName": "VM_Country_PQ",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1221,7 +1221,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Copy VM Metrics",
+								"activity": "Copy VM Country",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1533,10 +1533,9 @@
 				"[concat(variables('factoryId'), '/datasets/SQL_Dates_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_Table')]",
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Country_Table')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Country_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Date_Table')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Dates_PQ')]"
 			]
@@ -2365,7 +2364,68 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "ID",
+						"type": "INT32"
+					},
+					{
+						"name": "Updated",
+						"type": "DATE"
+					},
+					{
+						"name": "Confirmed",
+						"type": "INT32"
+					},
+					{
+						"name": "Confirmed_Change",
+						"type": "INT32"
+					},
+					{
+						"name": "Deaths",
+						"type": "INT32"
+					},
+					{
+						"name": "Deaths_Change",
+						"type": "INT32"
+					},
+					{
+						"name": "Recovered",
+						"type": "INT32"
+					},
+					{
+						"name": "Recovered_Change",
+						"type": "INT32"
+					},
+					{
+						"name": "Latitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "ISO2",
+						"type": "UTF8"
+					},
+					{
+						"name": "ISO3",
+						"type": "UTF8"
+					},
+					{
+						"name": "Country_Region",
+						"type": "UTF8"
+					},
+					{
+						"name": "load_time",
+						"type": "INT96"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
