@@ -2,7 +2,7 @@
 	"name": "VM_Metrics_Table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SqlServer1",
+			"referenceName": "SqlServer2",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
