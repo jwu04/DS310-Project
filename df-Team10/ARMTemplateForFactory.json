@@ -936,7 +936,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Parquet4_copy1",
+								"referenceName": "Parquet5",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -989,7 +989,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Parquet4_copy2",
+								"referenceName": "Parquet6",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1012,9 +1012,9 @@
 				"[concat(variables('factoryId'), '/datasets/CosmosDbNoSqlContainer1')]",
 				"[concat(variables('factoryId'), '/datasets/Parquet4')]",
 				"[concat(variables('factoryId'), '/datasets/covid19')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet4_copy1')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet5')]",
 				"[concat(variables('factoryId'), '/datasets/covid19_copy1')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet4_copy2')]"
+				"[concat(variables('factoryId'), '/datasets/Parquet6')]"
 			]
 		},
 		{
@@ -1935,7 +1935,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet4_copy1')]",
+			"name": "[concat(parameters('factoryName'), '/Parquet5')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1948,7 +1948,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "1",
 						"container": "vm-data"
 					},
 					"compressionCodec": "snappy"
@@ -1960,7 +1959,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet4_copy2')]",
+			"name": "[concat(parameters('factoryName'), '/Parquet6')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1973,7 +1972,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "2",
 						"container": "vm-data"
 					},
 					"compressionCodec": "snappy"
