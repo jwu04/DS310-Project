@@ -209,6 +209,9 @@
 					"referenceName": "CosmosDbNoSql2",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "CosmosDbSqlApiCollection",
 				"schema": {
@@ -380,6 +383,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Source_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -404,6 +410,9 @@
 					"referenceName": "AzureDataLakeStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -427,6 +436,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureSqlDatabase5",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -469,6 +481,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureSqlDatabase6",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -584,6 +599,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -629,6 +647,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -673,6 +694,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureSqlDatabase6",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
@@ -764,6 +788,9 @@
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
 				},
 				"annotations": [],
 				"type": "Parquet",

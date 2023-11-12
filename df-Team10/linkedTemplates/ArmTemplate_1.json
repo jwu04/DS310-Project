@@ -29,6 +29,9 @@
 					"referenceName": "SqlServer2",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Source_Data"
+				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [
@@ -141,6 +144,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -163,6 +169,9 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "Sink_Parquet_Data"
+				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -184,6 +193,9 @@
 				"linkedServiceName": {
 					"referenceName": "SqlServer2",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -307,6 +319,9 @@
 				"linkedServiceName": {
 					"referenceName": "SqlServer1",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
