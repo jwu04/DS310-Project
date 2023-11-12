@@ -841,7 +841,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
+						"type": "SqlServerSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -1041,7 +1041,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SQL_Metrics_Table",
+						"referenceName": "VM_Metrics_Table",
 						"type": "DatasetReference"
 					}
 				],
