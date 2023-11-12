@@ -2,7 +2,7 @@
 	"name": "SQL_Metrics_PQ",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -12,8 +12,8 @@
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"container": "sql-database"
+				"type": "AzureBlobFSLocation",
+				"fileSystem": "sql-database"
 			},
 			"compressionCodec": "snappy"
 		},
