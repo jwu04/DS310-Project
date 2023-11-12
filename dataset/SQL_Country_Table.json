@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable5",
+	"name": "SQL_Country_Table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase5",

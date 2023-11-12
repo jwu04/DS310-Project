@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable6",
+	"name": "SQL_Metrics_Table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase6",

@@ -1,5 +1,5 @@
 {
-	"name": "Parquet5",
+	"name": "VM_Country_PQ",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",

@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable7",
+	"name": "SQL_Date_Table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase6",

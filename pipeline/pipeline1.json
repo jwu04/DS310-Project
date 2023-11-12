@@ -95,13 +95,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable5",
+						"referenceName": "SQL_Country_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet1",
+						"referenceName": "SQL_Country_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -319,13 +319,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable6",
+						"referenceName": "SQL_Metrics_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet2",
+						"referenceName": "SQL_Metrics_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -611,13 +611,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureSqlTable7",
+						"referenceName": "SQL_Date_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet3",
+						"referenceName": "SQL_Dates_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -802,13 +802,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "CosmosDbNoSqlContainer1",
+						"referenceName": "CosmosDbNoSql_PQ",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet4",
+						"referenceName": "Cosmos_Data",
 						"type": "DatasetReference"
 					}
 				]
@@ -853,13 +853,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "covid19",
+						"referenceName": "VM_Country_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet5",
+						"referenceName": "VM_Country_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -904,13 +904,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "covid19_copy1",
+						"referenceName": "VM_Metrics_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet6",
+						"referenceName": "VM_Metrics_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -954,13 +954,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "covid19_copy2",
+						"referenceName": "VM_Date_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet6_copy1",
+						"referenceName": "VM_Dates_PQ",
 						"type": "DatasetReference"
 					}
 				]
