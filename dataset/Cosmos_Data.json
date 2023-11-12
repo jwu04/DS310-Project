@@ -5,6 +5,9 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Source_Data"
+		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {

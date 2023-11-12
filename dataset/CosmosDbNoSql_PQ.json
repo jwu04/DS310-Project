@@ -5,6 +5,9 @@
 			"referenceName": "CosmosDbNoSql2",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Sink_Parquet_Data"
+		},
 		"annotations": [],
 		"type": "CosmosDbSqlApiCollection",
 		"schema": {

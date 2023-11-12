@@ -5,6 +5,9 @@
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Sink_Parquet_Data"
+		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {

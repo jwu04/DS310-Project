@@ -5,6 +5,9 @@
 			"referenceName": "SqlServer2",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Source_Data"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [
