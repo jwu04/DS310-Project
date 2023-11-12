@@ -828,7 +828,7 @@
 				]
 			},
 			{
-				"name": "Copy VM Country",
+				"name": "Copy VM Metrics",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -841,7 +841,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
+						"type": "AzureSqlSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -921,23 +921,23 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "VM_Country_Table",
+						"referenceName": "SQL_Metrics_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "VM_Country_PQ",
+						"referenceName": "VM_Metrics_PQ",
 						"type": "DatasetReference"
 					}
 				]
 			},
 			{
-				"name": "Copy VM Metrics",
+				"name": "Copy VM Country",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy VM Country",
+						"activity": "Copy VM Metrics",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -1153,13 +1153,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "VM_Metrics_Table",
+						"referenceName": "VM_Country_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "VM_Metrics_PQ",
+						"referenceName": "VM_Country_PQ",
 						"type": "DatasetReference"
 					}
 				]
@@ -1169,7 +1169,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy VM Metrics",
+						"activity": "Copy VM Country",
 						"dependencyConditions": [
 							"Succeeded"
 						]
