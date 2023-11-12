@@ -816,13 +816,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "CosmosDbNoSql_PQ",
+						"referenceName": "Cosmos_Policy_Table",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Cosmos_Data",
+						"referenceName": "Cosmos_Policy_PQ",
 						"type": "DatasetReference"
 					}
 				]

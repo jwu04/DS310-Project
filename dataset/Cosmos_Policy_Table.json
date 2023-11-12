@@ -1,12 +1,12 @@
 {
-	"name": "CosmosDbNoSql_PQ",
+	"name": "Cosmos_Policy_Table",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "CosmosDbNoSql2",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Sink_Parquet_Data"
+			"name": "Source_Data"
 		},
 		"annotations": [],
 		"type": "CosmosDbSqlApiCollection",

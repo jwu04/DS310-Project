@@ -1,18 +1,19 @@
 {
-	"name": "Cosmos_Data",
+	"name": "Cosmos_Policy_PQ",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Source_Data"
+			"name": "Sink_Parquet_Data"
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "policies.parquet",
 				"container": "nosql-database"
 			},
 			"compressionCodec": "snappy"
