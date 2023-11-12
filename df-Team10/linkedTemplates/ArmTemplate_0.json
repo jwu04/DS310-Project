@@ -1090,7 +1090,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy_from_3_Sources')]",
+			"name": "[concat(parameters('factoryName'), '/Copy Source Tables to Parquets')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
