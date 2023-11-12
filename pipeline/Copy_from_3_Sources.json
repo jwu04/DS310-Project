@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Copy SQL Country",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -107,9 +107,16 @@
 				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "Copy SQL Metrics",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy SQL Country",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -331,9 +338,16 @@
 				]
 			},
 			{
-				"name": "Copy data3",
+				"name": "Copy SQL Dates",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy SQL Metrics",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -623,7 +637,7 @@
 				]
 			},
 			{
-				"name": "Copy data4",
+				"name": "Copy Cosmos Policy",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -814,7 +828,7 @@
 				]
 			},
 			{
-				"name": "Copy data5",
+				"name": "Copy VM Country",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -865,9 +879,16 @@
 				]
 			},
 			{
-				"name": "Copy data6",
+				"name": "Copy VM Metrics",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy VM Country",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -916,9 +937,16 @@
 				]
 			},
 			{
-				"name": "Copy data7",
+				"name": "Copy VM Dates",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy VM Metrics",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
