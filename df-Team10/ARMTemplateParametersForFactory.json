@@ -14,9 +14,6 @@
 		"CosmosDbNoSql2_connectionString": {
 			"value": ""
 		},
-		"SqlServer1_connectionString": {
-			"value": ""
-		},
 		"SqlServer2_connectionString": {
 			"value": ""
 		},
