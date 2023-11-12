@@ -2,7 +2,7 @@
 	"name": "VM_Country_Table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SqlServer1",
+			"referenceName": "SqlServer2",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
