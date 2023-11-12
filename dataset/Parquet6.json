@@ -1,5 +1,5 @@
 {
-	"name": "Parquet4_copy2",
+	"name": "Parquet6",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "2",
 				"container": "vm-data"
 			},
 			"compressionCodec": "snappy"

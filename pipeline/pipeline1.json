@@ -859,7 +859,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet4_copy1",
+						"referenceName": "Parquet5",
 						"type": "DatasetReference"
 					}
 				]
@@ -910,7 +910,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Parquet4_copy2",
+						"referenceName": "Parquet6",
 						"type": "DatasetReference"
 					}
 				]
