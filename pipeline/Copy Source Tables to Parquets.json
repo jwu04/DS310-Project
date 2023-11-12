@@ -1,5 +1,5 @@
 {
-	"name": "Copy_from_3_Sources",
+	"name": "Copy Source Tables to Parquets",
 	"properties": {
 		"activities": [
 			{
