@@ -201,615 +201,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase3",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Country",
-						"type": "varchar"
-					},
-					{
-						"name": "CountryCode",
-						"type": "varchar"
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Country"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase3')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase3",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Updated",
-						"type": "date"
-					},
-					{
-						"name": "Confirmed",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Confirmed_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "ISO2",
-						"type": "varchar"
-					},
-					{
-						"name": "ISO3",
-						"type": "varchar"
-					},
-					{
-						"name": "Country_Region",
-						"type": "varchar"
-					},
-					{
-						"name": "load_time",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Covid19_Metrics"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase3')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable3')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase3",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FullDate",
-						"type": "date"
-					},
-					{
-						"name": "isWeekDay",
-						"type": "bit"
-					},
-					{
-						"name": "DayOfWeek",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayName",
-						"type": "varchar"
-					},
-					{
-						"name": "WeekOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WeekName",
-						"type": "varchar"
-					},
-					{
-						"name": "MonthOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "MonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalYear",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dates"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase3')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable4')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase4",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FullDate",
-						"type": "date"
-					},
-					{
-						"name": "isWeekDay",
-						"type": "bit"
-					},
-					{
-						"name": "DayOfWeek",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayName",
-						"type": "varchar"
-					},
-					{
-						"name": "WeekOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WeekName",
-						"type": "varchar"
-					},
-					{
-						"name": "MonthOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "MonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalYear",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dates"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase4')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable5')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase5",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Country",
-						"type": "varchar"
-					},
-					{
-						"name": "CountryCode",
-						"type": "varchar"
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Country"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase5')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable6')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase6",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Updated",
-						"type": "date"
-					},
-					{
-						"name": "Confirmed",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Confirmed_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "ISO2",
-						"type": "varchar"
-					},
-					{
-						"name": "ISO3",
-						"type": "varchar"
-					},
-					{
-						"name": "Country_Region",
-						"type": "varchar"
-					},
-					{
-						"name": "load_time",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Covid19_Metrics"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase6')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable7')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase6",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FullDate",
-						"type": "date"
-					},
-					{
-						"name": "isWeekDay",
-						"type": "bit"
-					},
-					{
-						"name": "DayOfWeek",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayName",
-						"type": "varchar"
-					},
-					{
-						"name": "WeekOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WeekName",
-						"type": "varchar"
-					},
-					{
-						"name": "MonthOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "MonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalYear",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dates"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase6')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CosmosDbNoSqlContainer1')]",
+			"name": "[concat(parameters('factoryName'), '/CosmosDbNoSql_PQ')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -980,7 +372,31 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"name": "[concat(parameters('factoryName'), '/Cosmos_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "nosql-database"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Country_PQ')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1001,6 +417,367 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Country_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase5",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Country",
+						"type": "varchar"
+					},
+					{
+						"name": "CountryCode",
+						"type": "varchar"
+					},
+					{
+						"name": "Latitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Country"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase5')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Date_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase6",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "DateKey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FullDate",
+						"type": "date"
+					},
+					{
+						"name": "isWeekDay",
+						"type": "bit"
+					},
+					{
+						"name": "DayOfWeek",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfMonth",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayName",
+						"type": "varchar"
+					},
+					{
+						"name": "WeekOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WeekName",
+						"type": "varchar"
+					},
+					{
+						"name": "MonthOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "MonthName",
+						"type": "varchar"
+					},
+					{
+						"name": "CalendarQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CalendarQuarterName",
+						"type": "varchar"
+					},
+					{
+						"name": "CalendarYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalMonth",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalMonthName",
+						"type": "varchar"
+					},
+					{
+						"name": "FiscalQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalQuarterName",
+						"type": "varchar"
+					},
+					{
+						"name": "FiscalYear",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Dates"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase6')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Dates_PQ')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "sql-database"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Country",
+						"type": "UTF8"
+					},
+					{
+						"name": "CountryCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "Latitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Metrics_PQ')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "sql-database"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "Country",
+						"type": "UTF8"
+					},
+					{
+						"name": "CountryCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "Latitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_Metrics_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase6",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Updated",
+						"type": "date"
+					},
+					{
+						"name": "Confirmed",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Confirmed_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Deaths",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Deaths_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Recovered",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Recovered_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Latitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "ISO2",
+						"type": "varchar"
+					},
+					{
+						"name": "ISO3",
+						"type": "varchar"
+					},
+					{
+						"name": "Country_Region",
+						"type": "varchar"
+					},
+					{
+						"name": "load_time",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Covid19_Metrics"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase6')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VM_Country_PQ')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "vm-data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		}
 	]
