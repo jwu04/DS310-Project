@@ -2,7 +2,7 @@
 	"name": "SQL_Country_Table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureSqlDatabase5",
+			"referenceName": "AzureSqlDatabase6",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
