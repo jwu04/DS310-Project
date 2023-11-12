@@ -2,7 +2,7 @@
 	"name": "VM_Date_Table",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "SqlServer2",
+			"referenceName": "SqlServer1",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
