@@ -1640,6 +1640,53 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Recover Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Recovery Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Cosmos_Policy_PQ')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1860,6 +1907,51 @@
 					"compressionCodec": "snappy"
 				},
 				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parquet2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "six-collections"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "FullDate",
+						"type": "DATE"
+					},
+					{
+						"name": "isWeekDay",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "DayName",
+						"type": "UTF8"
+					},
+					{
+						"name": "MonthName",
+						"type": "UTF8"
+					},
+					{
+						"name": "FiscalQuarterName",
+						"type": "UTF8"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
@@ -3137,6 +3229,148 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Recovery Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select2"
+						},
+						{
+							"name": "select3"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source1",
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source2",
+						"source2 select(mapColumn(",
+						"          ID,",
+						"          Updated,",
+						"          Confirmed,",
+						"          Confirmed_Change,",
+						"          Deaths,",
+						"          Deaths_Change,",
+						"          Recovered,",
+						"          Recovered_Change,",
+						"          Latitude,",
+						"          Longitude,",
+						"          ISO2,",
+						"          ISO3,",
+						"          Country_Region,",
+						"          load_time",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"source1 select(mapColumn(",
+						"          ID,",
+						"          Updated,",
+						"          Confirmed,",
+						"          Confirmed_Change,",
+						"          Deaths,",
+						"          Deaths_Change,",
+						"          Recovered,",
+						"          Recovered_Change,",
+						"          Latitude,",
+						"          Longitude,",
+						"          ISO2,",
+						"          ISO3,",
+						"          Country_Region,",
+						"          load_time",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select3",
+						"select3, select2 union(byName: false)~> union1",
+						"union1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          FullDate as date,",
+						"          isWeekDay as boolean,",
+						"          DayName as string,",
+						"          MonthName as string,",
+						"          FiscalQuarterName as string",
+						"     ),",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet2')]"
 			]
 		}
 	]
