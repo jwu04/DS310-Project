@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "Recovery Data Flow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -21,6 +21,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "Parquet2",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
@@ -115,6 +119,14 @@
 				"select3, select2 union(byName: false)~> union1",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          FullDate as date,",
+				"          isWeekDay as boolean,",
+				"          DayName as string,",
+				"          MonthName as string,",
+				"          FiscalQuarterName as string",
+				"     ),",
+				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]

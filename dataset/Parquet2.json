@@ -1,0 +1,40 @@
+{
+	"name": "Parquet2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "six-collections"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "FullDate",
+				"type": "DATE"
+			},
+			{
+				"name": "isWeekDay",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "DayName",
+				"type": "UTF8"
+			},
+			{
+				"name": "MonthName",
+				"type": "UTF8"
+			},
+			{
+				"name": "FiscalQuarterName",
+				"type": "UTF8"
+			}
+		]
+	}
+}
