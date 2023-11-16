@@ -13,7 +13,373 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy_from_3_Sources')]",
+			"name": "[concat(parameters('factoryName'), '/VM_Date_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "DateKey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FullDate",
+						"type": "date"
+					},
+					{
+						"name": "isWeekDay",
+						"type": "bit"
+					},
+					{
+						"name": "DayOfWeek",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfMonth",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DayName",
+						"type": "varchar"
+					},
+					{
+						"name": "WeekOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "WeekName",
+						"type": "varchar"
+					},
+					{
+						"name": "MonthOfYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "MonthName",
+						"type": "varchar"
+					},
+					{
+						"name": "CalendarQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CalendarQuarterName",
+						"type": "varchar"
+					},
+					{
+						"name": "CalendarYear",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalMonth",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalMonthName",
+						"type": "varchar"
+					},
+					{
+						"name": "FiscalQuarter",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FiscalQuarterName",
+						"type": "varchar"
+					},
+					{
+						"name": "FiscalYear",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Dates"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VM_Metrics_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SqlServer2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Source_Data"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Updated",
+						"type": "date"
+					},
+					{
+						"name": "Confirmed",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Confirmed_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Deaths",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Deaths_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Recovered",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Recovered_Change",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Latitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "decimal",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "ISO2",
+						"type": "varchar"
+					},
+					{
+						"name": "ISO3",
+						"type": "varchar"
+					},
+					{
+						"name": "Country_Region",
+						"type": "varchar"
+					},
+					{
+						"name": "load_time",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Covid19_Metrics"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dates Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Dates_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "datesfromsql",
+							"description": "grab date data from sql"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Dates_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "datesfromvm",
+							"description": "grab date data from vm"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "datescollection",
+							"description": "dump data into dates collection"
+						}
+					],
+					"transformations": [
+						{
+							"name": "reducecolumns"
+						},
+						{
+							"name": "datesunion",
+							"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          DateKey as integer,",
+						"          FullDate as date,",
+						"          isWeekDay as boolean,",
+						"          DayOfWeek as integer,",
+						"          DayOfMonth as integer,",
+						"          DayOfQuarter as integer,",
+						"          DayOfYear as integer,",
+						"          DayName as string,",
+						"          WeekOfYear as integer,",
+						"          WeekName as string,",
+						"          MonthOfYear as integer,",
+						"          MonthName as string,",
+						"          CalendarQuarter as integer,",
+						"          CalendarQuarterName as string,",
+						"          CalendarYear as integer,",
+						"          FiscalMonth as integer,",
+						"          FiscalMonthName as string,",
+						"          FiscalQuarter as integer,",
+						"          FiscalQuarterName as string,",
+						"          FiscalYear as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> datesfromsql",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> datesfromvm",
+						"datesunion select(mapColumn(",
+						"          FullDate,",
+						"          isWeekDay,",
+						"          DayName,",
+						"          MonthName,",
+						"          FiscalQuarterName",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> reducecolumns",
+						"datesfromsql, datesfromvm union(byName: true)~> datesunion",
+						"reducecolumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> datescollection"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Policy Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Cosmos_Policy_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "policycosmos",
+							"description": "Grabbing Policy from Cosmos Parquet file"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Cosmos_Policy_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "policycollection",
+							"description": "Putting all of Policy data in Policy collection"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          C1_School_closing as double,",
+						"          C2_Workplace_closing as double,",
+						"          C3_Cancel_public_events as double,",
+						"          C4_Restrictions_on_gatherings as double,",
+						"          C5_Close_public_transport as double,",
+						"          C6_Stay_at_home_requirements as double,",
+						"          C7_Restrictions_on_internal_movement as double,",
+						"          C8_International_travel_controls as double,",
+						"          E2_Debt_contract_relief as double,",
+						"          E3_Fiscal_measures as double,",
+						"          E4_International_support as double,",
+						"          H1_Public_information_campaigns as double,",
+						"          H2_Testing_policy as double,",
+						"          H3_Contact_tracing as double,",
+						"          H7_Vaccination_policy as double,",
+						"          H8_Protection_of_elderly_people as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> policycosmos",
+						"policycosmos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> policycollection"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Source Tables to Parquets')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1500,7 +1866,10 @@
 				"annotations": [],
 				"lastPublishTime": "2023-11-09T18:35:52Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Date_Table')]"
+			]
 		}
 	]
 }

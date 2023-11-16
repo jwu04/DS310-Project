@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "df-Team10"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"AzureDataLakeStorage1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
@@ -22,6 +26,10 @@
 		"SqlServer2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer2'"
+		},
+		"policycollectionls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'policycollectionls'"
 		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
@@ -1740,6 +1748,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "six-collections"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Country_PQ')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1761,7 +1793,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "Country",
+						"type": "UTF8"
+					},
+					{
+						"name": "CountryCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "Latitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
@@ -1953,24 +2006,84 @@
 				},
 				"schema": [
 					{
-						"name": "Country",
+						"name": "DateKey",
+						"type": "INT32"
+					},
+					{
+						"name": "FullDate",
+						"type": "DATE"
+					},
+					{
+						"name": "isWeekDay",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "DayOfWeek",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfMonth",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfYear",
+						"type": "INT32"
+					},
+					{
+						"name": "DayName",
 						"type": "UTF8"
 					},
 					{
-						"name": "CountryCode",
+						"name": "WeekOfYear",
+						"type": "INT32"
+					},
+					{
+						"name": "WeekName",
 						"type": "UTF8"
 					},
 					{
-						"name": "Latitude",
-						"type": "DECIMAL",
-						"precision": 10,
-						"scale": 5
+						"name": "MonthOfYear",
+						"type": "INT32"
 					},
 					{
-						"name": "Longitude",
-						"type": "DECIMAL",
-						"precision": 10,
-						"scale": 5
+						"name": "MonthName",
+						"type": "UTF8"
+					},
+					{
+						"name": "CalendarQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "CalendarQuarterName",
+						"type": "UTF8"
+					},
+					{
+						"name": "CalendarYear",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalMonth",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalMonthName",
+						"type": "UTF8"
+					},
+					{
+						"name": "FiscalQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalQuarterName",
+						"type": "UTF8"
+					},
+					{
+						"name": "FiscalYear",
+						"type": "INT32"
 					}
 				]
 			},
@@ -2523,6 +2636,19 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -2585,6 +2711,19 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/policycollectionls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('policycollectionls_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SHIR-Team10')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -2593,6 +2732,171 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dates Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Dates_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "datesfromsql",
+							"description": "grab date data from sql"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Dates_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "datesfromvm",
+							"description": "grab date data from vm"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "datescollection",
+							"description": "dump data into dates collection"
+						}
+					],
+					"transformations": [
+						{
+							"name": "reducecolumns"
+						},
+						{
+							"name": "datesunion",
+							"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          DateKey as integer,",
+						"          FullDate as date,",
+						"          isWeekDay as boolean,",
+						"          DayOfWeek as integer,",
+						"          DayOfMonth as integer,",
+						"          DayOfQuarter as integer,",
+						"          DayOfYear as integer,",
+						"          DayName as string,",
+						"          WeekOfYear as integer,",
+						"          WeekName as string,",
+						"          MonthOfYear as integer,",
+						"          MonthName as string,",
+						"          CalendarQuarter as integer,",
+						"          CalendarQuarterName as string,",
+						"          CalendarYear as integer,",
+						"          FiscalMonth as integer,",
+						"          FiscalMonthName as string,",
+						"          FiscalQuarter as integer,",
+						"          FiscalQuarterName as string,",
+						"          FiscalYear as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> datesfromsql",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> datesfromvm",
+						"datesunion select(mapColumn(",
+						"          FullDate,",
+						"          isWeekDay,",
+						"          DayName,",
+						"          MonthName,",
+						"          FiscalQuarterName",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> reducecolumns",
+						"datesfromsql, datesfromvm union(byName: true)~> datesunion",
+						"reducecolumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> datescollection"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Dates_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Dates_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Policy Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Cosmos_Policy_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "policycosmos",
+							"description": "Grabbing Policy from Cosmos Parquet file"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Cosmos_Policy_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "policycollection",
+							"description": "Putting all of Policy data in Policy collection"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          C1_School_closing as double,",
+						"          C2_Workplace_closing as double,",
+						"          C3_Cancel_public_events as double,",
+						"          C4_Restrictions_on_gatherings as double,",
+						"          C5_Close_public_transport as double,",
+						"          C6_Stay_at_home_requirements as double,",
+						"          C7_Restrictions_on_internal_movement as double,",
+						"          C8_International_travel_controls as double,",
+						"          E2_Debt_contract_relief as double,",
+						"          E3_Fiscal_measures as double,",
+						"          E4_International_support as double,",
+						"          H1_Public_information_campaigns as double,",
+						"          H2_Testing_policy as double,",
+						"          H3_Contact_tracing as double,",
+						"          H7_Vaccination_policy as double,",
+						"          H8_Protection_of_elderly_people as double",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> policycosmos",
+						"policycosmos sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> policycollection"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]"
+			]
 		}
 	]
 }

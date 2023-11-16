@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "df-Team10"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"AzureDataLakeStorage1_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
@@ -18,6 +22,10 @@
 		"CosmosDbNoSql2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'CosmosDbNoSql2'"
+		},
+		"policycollectionls_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'policycollectionls'"
 		},
 		"SqlServer2_connectionString": {
 			"type": "secureString",
@@ -32,6 +40,19 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -71,6 +92,19 @@
 				"type": "CosmosDb",
 				"typeProperties": {
 					"connectionString": "[parameters('CosmosDbNoSql2_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/policycollectionls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('policycollectionls_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -288,6 +322,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "six-collections"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SQL_Country_PQ')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -309,7 +367,28 @@
 					},
 					"compressionCodec": "snappy"
 				},
-				"schema": []
+				"schema": [
+					{
+						"name": "Country",
+						"type": "UTF8"
+					},
+					{
+						"name": "CountryCode",
+						"type": "UTF8"
+					},
+					{
+						"name": "Latitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					},
+					{
+						"name": "Longitude",
+						"type": "DECIMAL",
+						"precision": 10,
+						"scale": 5
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
@@ -501,24 +580,84 @@
 				},
 				"schema": [
 					{
-						"name": "Country",
+						"name": "DateKey",
+						"type": "INT32"
+					},
+					{
+						"name": "FullDate",
+						"type": "DATE"
+					},
+					{
+						"name": "isWeekDay",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "DayOfWeek",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfMonth",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "DayOfYear",
+						"type": "INT32"
+					},
+					{
+						"name": "DayName",
 						"type": "UTF8"
 					},
 					{
-						"name": "CountryCode",
+						"name": "WeekOfYear",
+						"type": "INT32"
+					},
+					{
+						"name": "WeekName",
 						"type": "UTF8"
 					},
 					{
-						"name": "Latitude",
-						"type": "DECIMAL",
-						"precision": 10,
-						"scale": 5
+						"name": "MonthOfYear",
+						"type": "INT32"
 					},
 					{
-						"name": "Longitude",
-						"type": "DECIMAL",
-						"precision": 10,
-						"scale": 5
+						"name": "MonthName",
+						"type": "UTF8"
+					},
+					{
+						"name": "CalendarQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "CalendarQuarterName",
+						"type": "UTF8"
+					},
+					{
+						"name": "CalendarYear",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalMonth",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalMonthName",
+						"type": "UTF8"
+					},
+					{
+						"name": "FiscalQuarter",
+						"type": "INT32"
+					},
+					{
+						"name": "FiscalQuarterName",
+						"type": "UTF8"
+					},
+					{
+						"name": "FiscalYear",
+						"type": "INT32"
 					}
 				]
 			},
@@ -876,1722 +1015,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SqlServer2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VM_Date_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Source_Data"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FullDate",
-						"type": "date"
-					},
-					{
-						"name": "isWeekDay",
-						"type": "bit"
-					},
-					{
-						"name": "DayOfWeek",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayName",
-						"type": "varchar"
-					},
-					{
-						"name": "WeekOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WeekName",
-						"type": "varchar"
-					},
-					{
-						"name": "MonthOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "MonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalYear",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dates"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/VM_Metrics_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Source_Data"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Updated",
-						"type": "date"
-					},
-					{
-						"name": "Confirmed",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Confirmed_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Deaths_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Recovered_Change",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "ISO2",
-						"type": "varchar"
-					},
-					{
-						"name": "ISO3",
-						"type": "varchar"
-					},
-					{
-						"name": "Country_Region",
-						"type": "varchar"
-					},
-					{
-						"name": "load_time",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Covid19_Metrics"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SqlServer2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Copy Source Tables to Parquets')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy SQL Country",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CountryCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "CountryCode",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SQL_Country_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Country_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy SQL Metrics",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy SQL Country",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ID",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Updated",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "Updated",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "Confirmed",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Confirmed",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Confirmed_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Confirmed_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Deaths",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Deaths",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Deaths_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Deaths_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Recovered",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Recovered",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Recovered_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Recovered_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "ISO2",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ISO2",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "ISO3",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ISO3",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "Country_Region",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Country_Region",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "load_time",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "load_time",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SQL_Metrics_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Metrics_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy SQL Dates",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy SQL Metrics",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "DateKey",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DateKey",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FullDate",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "FullDate",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "isWeekDay",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "isWeekDay",
-											"type": "Boolean",
-											"physicalType": "BOOLEAN"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfWeek",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfWeek",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfMonth",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfMonth",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "DayName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "WeekOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "WeekOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "WeekName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "WeekName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "MonthOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "MonthOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "MonthName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MonthName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "CalendarQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarQuarterName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "CalendarQuarterName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "CalendarYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalMonth",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalMonth",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalMonthName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "FiscalMonthName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalQuarterName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "FiscalQuarterName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SQL_Date_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SQL_Dates_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy Cosmos Policy",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "CosmosDbSqlApiSource",
-								"preferredRegions": []
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": true,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['C1_School closing']"
-										},
-										"sink": {
-											"name": "C1_School_closing",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C2_Workplace closing']"
-										},
-										"sink": {
-											"name": "C2_Workplace_closing",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C3_Cancel public events']"
-										},
-										"sink": {
-											"name": "C3_Cancel_public_events",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C4_Restrictions on gatherings']"
-										},
-										"sink": {
-											"name": "C4_Restrictions_on_gatherings",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C5_Close public transport']"
-										},
-										"sink": {
-											"name": "C5_Close_public_transport",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C6_Stay at home requirements']"
-										},
-										"sink": {
-											"name": "C6_Stay_at_home_requirements",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C7_Restrictions on internal movement']"
-										},
-										"sink": {
-											"name": "C7_Restrictions_on_internal_movement",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['C8_International travel controls']"
-										},
-										"sink": {
-											"name": "C8_International_travel_controls",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E2_Debt contract relief']"
-										},
-										"sink": {
-											"name": "E2_Debt_contract_relief",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E3_Fiscal measures']"
-										},
-										"sink": {
-											"name": "E3_Fiscal_measures",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E4_International support']"
-										},
-										"sink": {
-											"name": "E4_International_support",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['H1_Public information campaigns']"
-										},
-										"sink": {
-											"name": "H1_Public_information_campaigns",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['H2_Testing policy']"
-										},
-										"sink": {
-											"name": "H2_Testing_policy",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['H3_Contact tracing']"
-										},
-										"sink": {
-											"name": "H3_Contact_tracing",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['H7_Vaccination policy']"
-										},
-										"sink": {
-											"name": "H7_Vaccination_policy",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['H8_Protection of elderly people']"
-										},
-										"sink": {
-											"name": "H8_Protection_of_elderly_people",
-											"type": "Double"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Cosmos_Policy_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Cosmos_Policy_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy VM Metrics",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": true,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ID",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "ID",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Updated",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "Updated",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "Confirmed",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Confirmed",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Confirmed_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Confirmed_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Deaths",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Deaths",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Deaths_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Deaths_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Recovered",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Recovered",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Recovered_Change",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "Recovered_Change",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "ISO2",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ISO2",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "ISO3",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "ISO3",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "Country_Region",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Country_Region",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "load_time",
-											"type": "DateTime",
-											"physicalType": "datetime"
-										},
-										"sink": {
-											"name": "load_time",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VM_Metrics_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "VM_Metrics_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy VM Country",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy VM Metrics",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": true,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "Country",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CountryCode",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "CountryCode",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Latitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									},
-									{
-										"source": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "decimal",
-											"scale": 5,
-											"precision": 10
-										},
-										"sink": {
-											"name": "Longitude",
-											"type": "Decimal",
-											"physicalType": "DECIMAL"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VM_Country_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "VM_Country_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Copy VM Dates",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Copy VM Country",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "DateKey",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DateKey",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FullDate",
-											"type": "DateTime",
-											"physicalType": "date"
-										},
-										"sink": {
-											"name": "FullDate",
-											"type": "DateTime",
-											"physicalType": "INT_96"
-										}
-									},
-									{
-										"source": {
-											"name": "isWeekDay",
-											"type": "Boolean",
-											"physicalType": "bit"
-										},
-										"sink": {
-											"name": "isWeekDay",
-											"type": "Boolean",
-											"physicalType": "BOOLEAN"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfWeek",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfWeek",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfMonth",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfMonth",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "DayOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "DayName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "DayName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "WeekOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "WeekOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "WeekName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "WeekName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "MonthOfYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "MonthOfYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "MonthName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "MonthName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "CalendarQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarQuarterName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "CalendarQuarterName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "CalendarYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "CalendarYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalMonth",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalMonth",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalMonthName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "FiscalMonthName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalQuarter",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalQuarter",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalQuarterName",
-											"type": "String",
-											"physicalType": "varchar"
-										},
-										"sink": {
-											"name": "FiscalQuarterName",
-											"type": "String",
-											"physicalType": "UTF8"
-										}
-									},
-									{
-										"source": {
-											"name": "FiscalYear",
-											"type": "Int32",
-											"physicalType": "int"
-										},
-										"sink": {
-											"name": "FiscalYear",
-											"type": "Int32",
-											"physicalType": "INT_32"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "VM_Date_Table",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "VM_Dates_PQ",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-11-09T18:35:52Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SQL_Country_Table')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Country_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_Table')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Date_Table')]",
-				"[concat(variables('factoryId'), '/datasets/SQL_Dates_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_Table')]",
-				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Country_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Country_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Date_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Dates_PQ')]"
 			]
 		}
 	]
