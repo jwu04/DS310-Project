@@ -1,0 +1,61 @@
+{
+	"name": "Policy Data Flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Cosmos_Policy_PQ",
+						"type": "DatasetReference"
+					},
+					"name": "policycosmos",
+					"description": "Grabbing Policy from Cosmos Parquet file"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Cosmos_Policy_PQ",
+						"type": "DatasetReference"
+					},
+					"name": "policycollection",
+					"description": "Putting all of Policy data in Policy collection"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          C1_School_closing as double,",
+				"          C2_Workplace_closing as double,",
+				"          C3_Cancel_public_events as double,",
+				"          C4_Restrictions_on_gatherings as double,",
+				"          C5_Close_public_transport as double,",
+				"          C6_Stay_at_home_requirements as double,",
+				"          C7_Restrictions_on_internal_movement as double,",
+				"          C8_International_travel_controls as double,",
+				"          E2_Debt_contract_relief as double,",
+				"          E3_Fiscal_measures as double,",
+				"          E4_International_support as double,",
+				"          H1_Public_information_campaigns as double,",
+				"          H2_Testing_policy as double,",
+				"          H3_Contact_tracing as double,",
+				"          H7_Vaccination_policy as double,",
+				"          H8_Protection_of_elderly_people as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> policycosmos",
+				"policycosmos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> policycollection"
+			]
+		}
+	}
+}
