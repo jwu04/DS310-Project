@@ -38,6 +38,9 @@
 				{
 					"name": "datesunion",
 					"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+				},
+				{
+					"name": "filter1"
 				}
 			],
 			"scriptLines": [
@@ -81,11 +84,14 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> reducecolumns",
 				"datesfromsql, datesfromvm union(byName: true)~> datesunion",
-				"reducecolumns sink(allowSchemaDrift: true,",
+				"reducecolumns filter(ERROR_FUNCTION('')) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
+				"     partitionFileNames:[''],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> datescollection"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> datescollection"
 			]
 		}
 	}
