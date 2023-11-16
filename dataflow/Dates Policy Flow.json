@@ -1,0 +1,97 @@
+{
+	"name": "Dates Policy Flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SQL_Dates_PQ",
+						"type": "DatasetReference"
+					},
+					"name": "datesfromsql",
+					"description": "grab date data from sql"
+				},
+				{
+					"dataset": {
+						"referenceName": "VM_Dates_PQ",
+						"type": "DatasetReference"
+					},
+					"name": "datesfromvm",
+					"description": "grab date data from vm"
+				}
+			],
+			"sinks": [
+				{
+					"name": "datescollection",
+					"description": "dump data into dates collection"
+				}
+			],
+			"transformations": [
+				{
+					"name": "reducecolumns"
+				},
+				{
+					"name": "datesunion",
+					"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          DateKey as integer,",
+				"          FullDate as date,",
+				"          isWeekDay as boolean,",
+				"          DayOfWeek as integer,",
+				"          DayOfMonth as integer,",
+				"          DayOfQuarter as integer,",
+				"          DayOfYear as integer,",
+				"          DayName as string,",
+				"          WeekOfYear as integer,",
+				"          WeekName as string,",
+				"          MonthOfYear as integer,",
+				"          MonthName as string,",
+				"          CalendarQuarter as integer,",
+				"          CalendarQuarterName as string,",
+				"          CalendarYear as integer,",
+				"          FiscalMonth as integer,",
+				"          FiscalMonthName as string,",
+				"          FiscalQuarter as integer,",
+				"          FiscalQuarterName as string,",
+				"          FiscalYear as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> datesfromsql",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> datesfromvm",
+				"datesunion select(mapColumn(",
+				"          DateKey,",
+				"          FullDate,",
+				"          isWeekDay,",
+				"          DayOfWeek,",
+				"          DayOfMonth,",
+				"          DayOfQuarter,",
+				"          DayOfYear,",
+				"          DayName,",
+				"          WeekOfYear,",
+				"          WeekName,",
+				"          MonthOfYear,",
+				"          MonthName,",
+				"          CalendarQuarter,",
+				"          CalendarQuarterName,",
+				"          CalendarYear",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> reducecolumns",
+				"datesfromsql, datesfromvm union(byName: true)~> datesunion",
+				"reducecolumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> datescollection"
+			]
+		}
+	}
+}
