@@ -21,6 +21,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
 					"name": "sinkdeaths"
 				}
 			],
@@ -85,6 +89,7 @@
 				"     skipDuplicateMapOutputs: true) ~> selectdeaths",
 				"selectdeaths sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> sinkdeaths"
 			]
