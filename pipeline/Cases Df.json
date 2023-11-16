@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Cases Df",
 	"properties": {
 		"activities": [
 			{
-				"name": "Cases df",
+				"name": "caseflow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
