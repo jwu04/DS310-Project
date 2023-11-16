@@ -9,27 +9,27 @@
 						"referenceName": "SQL_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "sqlmetricspq"
 				},
 				{
 					"dataset": {
 						"referenceName": "VM_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "vmmetricspq"
 				}
 			],
 			"sinks": [
 				{
-					"name": "sink1"
+					"name": "sinkdeaths"
 				}
 			],
 			"transformations": [
 				{
-					"name": "union1"
+					"name": "uniondeaths"
 				},
 				{
-					"name": "select1"
+					"name": "selectdeaths"
 				}
 			],
 			"scriptLines": [
@@ -52,7 +52,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source1",
+				"     format: 'parquet') ~> sqlmetricspq",
 				"source(output(",
 				"          ID as integer,",
 				"          Updated as date,",
@@ -72,9 +72,9 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source2",
-				"source1, source2 union(byName: true)~> union1",
-				"union1 select(mapColumn(",
+				"     format: 'parquet') ~> vmmetricspq",
+				"sqlmetricspq, vmmetricspq union(byName: true)~> uniondeaths",
+				"uniondeaths select(mapColumn(",
 				"          ID,",
 				"          Updated,",
 				"          Deaths,",
@@ -82,11 +82,11 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectdeaths",
+				"selectdeaths sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true) ~> sinkdeaths"
 			]
 		}
 	}
