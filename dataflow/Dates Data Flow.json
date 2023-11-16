@@ -1,5 +1,5 @@
 {
-	"name": "Dates Policy Flow",
+	"name": "Dates Data Flow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -23,6 +23,10 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
 					"name": "datescollection",
 					"description": "dump data into dates collection"
 				}
@@ -68,27 +72,18 @@
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> datesfromvm",
 				"datesunion select(mapColumn(",
-				"          DateKey,",
 				"          FullDate,",
 				"          isWeekDay,",
-				"          DayOfWeek,",
-				"          DayOfMonth,",
-				"          DayOfQuarter,",
-				"          DayOfYear,",
 				"          DayName,",
-				"          WeekOfYear,",
-				"          WeekName,",
-				"          MonthOfYear,",
 				"          MonthName,",
-				"          CalendarQuarter,",
-				"          CalendarQuarterName,",
-				"          CalendarYear",
+				"          FiscalQuarterName",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> reducecolumns",
 				"datesfromsql, datesfromvm union(byName: true)~> datesunion",
 				"reducecolumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     format: 'parquet',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> datescollection"
 			]
