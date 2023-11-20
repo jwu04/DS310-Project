@@ -263,6 +263,109 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Cases Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "sqlmetricspq"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "vmmetricspq",
+							"description": "Metrics from VM parquet"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "cases"
+						}
+					],
+					"transformations": [
+						{
+							"name": "casesunion1",
+							"description": "Combining rows from metrics sql and metrics vm"
+						},
+						{
+							"name": "choosingmetricscolumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> sqlmetricspq",
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> vmmetricspq",
+						"sqlmetricspq, vmmetricspq union(byName: true)~> casesunion1",
+						"casesunion1 select(mapColumn(",
+						"          ID,",
+						"          Updated,",
+						"          Confirmed,",
+						"          Confirmed_Change,",
+						"          Country_Region",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> choosingmetricscolumns",
+						"choosingmetricscolumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> cases"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Cases Dataflow')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -453,8 +556,111 @@
 						"reducecolumns sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
+						"     partitionFileNames:['dates_merged'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> datescollection"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> datescollection"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Deaths Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "sqlmetricspq"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Metrics_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "vmmetricspq"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet1",
+								"type": "DatasetReference"
+							},
+							"name": "sinkdeaths"
+						}
+					],
+					"transformations": [
+						{
+							"name": "uniondeaths"
+						},
+						{
+							"name": "selectdeaths"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> sqlmetricspq",
+						"source(output(",
+						"          ID as integer,",
+						"          Updated as date,",
+						"          Confirmed as integer,",
+						"          Confirmed_Change as integer,",
+						"          Deaths as integer,",
+						"          Deaths_Change as integer,",
+						"          Recovered as integer,",
+						"          Recovered_Change as integer,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5),",
+						"          ISO2 as string,",
+						"          ISO3 as string,",
+						"          Country_Region as string,",
+						"          load_time as timestamp",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> vmmetricspq",
+						"sqlmetricspq, vmmetricspq union(byName: true)~> uniondeaths",
+						"uniondeaths select(mapColumn(",
+						"          ID,",
+						"          Updated,",
+						"          Deaths,",
+						"          Deaths_Change,",
+						"          Country_Region",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectdeaths",
+						"selectdeaths sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sinkdeaths"
 					]
 				}
 			},
@@ -611,36 +817,18 @@
 						"source2 select(mapColumn(",
 						"          ID,",
 						"          Updated,",
-						"          Confirmed,",
-						"          Confirmed_Change,",
-						"          Deaths,",
-						"          Deaths_Change,",
 						"          Recovered,",
 						"          Recovered_Change,",
-						"          Latitude,",
-						"          Longitude,",
-						"          ISO2,",
-						"          ISO3,",
-						"          Country_Region,",
-						"          load_time",
+						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select2",
 						"source1 select(mapColumn(",
 						"          ID,",
 						"          Updated,",
-						"          Confirmed,",
-						"          Confirmed_Change,",
-						"          Deaths,",
-						"          Deaths_Change,",
 						"          Recovered,",
 						"          Recovered_Change,",
-						"          Latitude,",
-						"          Longitude,",
-						"          ISO2,",
-						"          ISO3,",
-						"          Country_Region,",
-						"          load_time",
+						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select3",
@@ -682,13 +870,164 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "Cases Dataflow",
+								"referenceName": "Cases Data Flow",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"sqlmetricspq": {},
 									"vmmetricspq": {},
 									"cases": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "dates",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "caseflow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dates Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"datesfromsql": {},
+									"datesfromvm": {},
+									"datescollection": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "deaths",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "dates",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Deaths Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sqlmetricspq": {},
+									"vmmetricspq": {},
+									"sinkdeaths": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "policies",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "deaths",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Policy Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"policycosmos": {},
+									"policycollection": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "recoveries",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "policies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Recovery Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"source2": {},
+									"sink1": {}
 								}
 							},
 							"staging": {},
@@ -706,7 +1045,11 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Cases Dataflow')]"
+				"[concat(variables('factoryId'), '/dataflows/Cases Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]"
 			]
 		},
 		{
@@ -2251,7 +2594,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Recover Data Flow')]",
+			"name": "[concat(parameters('factoryName'), '/Recovery Data Flow')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
