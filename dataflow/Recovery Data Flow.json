@@ -9,14 +9,14 @@
 						"referenceName": "SQL_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "sqlMetricsPQ"
 				},
 				{
 					"dataset": {
 						"referenceName": "VM_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
+					"name": "vmMetricsPQ"
 				}
 			],
 			"sinks": [
@@ -25,18 +25,18 @@
 						"referenceName": "Parquet2",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "Recoveries"
 				}
 			],
 			"transformations": [
 				{
-					"name": "select2"
+					"name": "Select VM"
 				},
 				{
-					"name": "select3"
+					"name": "Select SQL"
 				},
 				{
-					"name": "union1"
+					"name": "unionRecoveries"
 				}
 			],
 			"scriptLines": [
@@ -59,7 +59,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source1",
+				"     format: 'parquet') ~> sqlMetricsPQ",
 				"source(output(",
 				"          ID as integer,",
 				"          Updated as date,",
@@ -79,8 +79,8 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> source2",
-				"source2 select(mapColumn(",
+				"     format: 'parquet') ~> vmMetricsPQ",
+				"vmMetricsPQ select(mapColumn(",
 				"          ID,",
 				"          Updated,",
 				"          Recovered,",
@@ -88,8 +88,8 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"source1 select(mapColumn(",
+				"     skipDuplicateMapOutputs: true) ~> Select VM",
+				"sqlMetricsPQ select(mapColumn(",
 				"          ID,",
 				"          Updated,",
 				"          Recovered,",
@@ -97,9 +97,9 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select3",
-				"select3, select2 union(byName: false)~> union1",
-				"union1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> Select SQL",
+				"Select SQL, Select VM union(byName: false)~> unionRecoveries",
+				"unionRecoveries sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          FullDate as date,",
@@ -109,8 +109,10 @@
 				"          FiscalQuarterName as string",
 				"     ),",
 				"     format: 'parquet',",
+				"     partitionFileNames:['recoveries'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Recoveries"
 			]
 		}
 	}
