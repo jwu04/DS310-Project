@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Parquet2",
+						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					},
 					"name": "Recoveries"
@@ -30,10 +30,10 @@
 			],
 			"transformations": [
 				{
-					"name": "Select VM"
+					"name": "selectVM"
 				},
 				{
-					"name": "Select SQL"
+					"name": "selectSQL"
 				},
 				{
 					"name": "unionRecoveries"
@@ -88,7 +88,7 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Select VM",
+				"     skipDuplicateMapOutputs: true) ~> selectVM",
 				"sqlMetricsPQ select(mapColumn(",
 				"          ID,",
 				"          Updated,",
@@ -97,17 +97,10 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Select SQL",
-				"Select SQL, Select VM union(byName: false)~> unionRecoveries",
+				"     skipDuplicateMapOutputs: true) ~> selectSQL",
+				"selectSQL, selectVM union(byName: false)~> unionRecoveries",
 				"unionRecoveries sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     input(",
-				"          FullDate as date,",
-				"          isWeekDay as boolean,",
-				"          DayName as string,",
-				"          MonthName as string,",
-				"          FiscalQuarterName as string",
-				"     ),",
 				"     format: 'parquet',",
 				"     partitionFileNames:['recoveries'],",
 				"     skipDuplicateMapInputs: true,",

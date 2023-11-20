@@ -9,14 +9,14 @@
 						"referenceName": "SQL_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "sqlmetricspq"
+					"name": "sqlMetricsPQ"
 				},
 				{
 					"dataset": {
 						"referenceName": "VM_Metrics_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "vmmetricspq",
+					"name": "vmMetricsPQ",
 					"description": "Metrics from VM parquet"
 				}
 			],
@@ -26,16 +26,16 @@
 						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					},
-					"name": "cases"
+					"name": "Cases"
 				}
 			],
 			"transformations": [
 				{
-					"name": "casesunion1",
+					"name": "unionCases",
 					"description": "Combining rows from metrics sql and metrics vm"
 				},
 				{
-					"name": "choosingmetricscolumns"
+					"name": "selectCases"
 				}
 			],
 			"scriptLines": [
@@ -58,7 +58,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> sqlmetricspq",
+				"     format: 'parquet') ~> sqlMetricsPQ",
 				"source(output(",
 				"          ID as integer,",
 				"          Updated as date,",
@@ -78,9 +78,9 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> vmmetricspq",
-				"sqlmetricspq, vmmetricspq union(byName: true)~> casesunion1",
-				"casesunion1 select(mapColumn(",
+				"     format: 'parquet') ~> vmMetricsPQ",
+				"sqlMetricsPQ, vmMetricsPQ union(byName: true)~> unionCases",
+				"unionCases select(mapColumn(",
 				"          ID,",
 				"          Updated,",
 				"          Confirmed,",
@@ -88,12 +88,14 @@
 				"          Country_Region",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> choosingmetricscolumns",
-				"choosingmetricscolumns sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectCases",
+				"selectCases sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
+				"     partitionFileNames:['cases'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> cases"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Cases"
 			]
 		}
 	}

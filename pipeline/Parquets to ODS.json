@@ -1,9 +1,9 @@
 {
-	"name": "Cases Df",
+	"name": "Parquets to ODS",
 	"properties": {
 		"activities": [
 			{
-				"name": "caseflow1",
+				"name": "Cases",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -27,11 +27,11 @@
 				}
 			},
 			{
-				"name": "dates",
+				"name": "Dates",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "caseflow1",
+						"activity": "Cases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -58,11 +58,11 @@
 				}
 			},
 			{
-				"name": "deaths",
+				"name": "Deaths",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "dates",
+						"activity": "Dates",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -89,11 +89,11 @@
 				}
 			},
 			{
-				"name": "policies",
+				"name": "Policies",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "deaths",
+						"activity": "Deaths",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -120,11 +120,11 @@
 				}
 			},
 			{
-				"name": "recoveries",
+				"name": "Recoveries",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "policies",
+						"activity": "Policies",
 						"dependencyConditions": [
 							"Succeeded"
 						]

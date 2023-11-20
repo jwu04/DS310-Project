@@ -9,17 +9,17 @@
 						"referenceName": "Cosmos_Policy_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "policycosmos",
+					"name": "policyCosmos",
 					"description": "Grabbing Policy from Cosmos Parquet file"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Cosmos_Policy_PQ",
+						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					},
-					"name": "policycollection",
+					"name": "Policies",
 					"description": "Putting all of Policy data in Policy collection"
 				}
 			],
@@ -46,15 +46,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> policycosmos",
-				"policycosmos sink(allowSchemaDrift: true,",
+				"     format: 'parquet') ~> policyCosmos",
+				"policyCosmos sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"     partitionFileNames:['policies'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> policycollection"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1),",
+				"     preCommands: [],",
+				"     postCommands: []) ~> Policies"
 			]
 		}
 	}
