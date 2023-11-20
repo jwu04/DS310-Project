@@ -316,6 +316,9 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['cases'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> Cases"
@@ -413,6 +416,9 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['dates'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> Dates"
@@ -516,6 +522,9 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['deaths'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> Deaths"
@@ -579,11 +588,12 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['policies'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1),",
-						"     preCommands: [],",
-						"     postCommands: []) ~> Policies"
+						"     partitionBy('hash', 1)) ~> Policies"
 					]
 				}
 			},
@@ -696,6 +706,9 @@
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['recoveries'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     partitionBy('hash', 1)) ~> Recoveries"
