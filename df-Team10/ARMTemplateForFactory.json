@@ -1966,7 +1966,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "six-collections"
+						"container": "operational-data-store"
 					},
 					"compressionCodec": "snappy"
 				},
