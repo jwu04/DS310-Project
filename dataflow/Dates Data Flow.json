@@ -24,7 +24,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "Parquet1",
+						"referenceName": "ODS",
 						"type": "DatasetReference"
 					},
 					"name": "Dates",

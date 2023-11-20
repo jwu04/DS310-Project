@@ -1,9 +1,12 @@
 {
-	"name": "Parquet1",
+	"name": "ODS",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ODS_Data"
 		},
 		"annotations": [],
 		"type": "Parquet",
