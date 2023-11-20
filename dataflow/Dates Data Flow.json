@@ -9,7 +9,7 @@
 						"referenceName": "SQL_Dates_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "datesfromsql",
+					"name": "sqlDatesPQ",
 					"description": "grab date data from sql"
 				},
 				{
@@ -17,7 +17,7 @@
 						"referenceName": "VM_Dates_PQ",
 						"type": "DatasetReference"
 					},
-					"name": "datesfromvm",
+					"name": "vmDatesPQ",
 					"description": "grab date data from vm"
 				}
 			],
@@ -27,16 +27,16 @@
 						"referenceName": "Parquet1",
 						"type": "DatasetReference"
 					},
-					"name": "datescollection",
+					"name": "Dates",
 					"description": "dump data into dates collection"
 				}
 			],
 			"transformations": [
 				{
-					"name": "reducecolumns"
+					"name": "selectDates"
 				},
 				{
-					"name": "datesunion",
+					"name": "unionDates",
 					"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
 				}
 			],
@@ -66,12 +66,12 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> datesfromsql",
+				"     format: 'parquet') ~> sqlDatesPQ",
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     format: 'parquet') ~> datesfromvm",
-				"datesunion select(mapColumn(",
+				"     format: 'parquet') ~> vmDatesPQ",
+				"unionDates select(mapColumn(",
 				"          FullDate,",
 				"          isWeekDay,",
 				"          DayName,",
@@ -79,15 +79,15 @@
 				"          FiscalQuarterName",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> reducecolumns",
-				"datesfromsql, datesfromvm union(byName: true)~> datesunion",
-				"reducecolumns sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectDates",
+				"sqlDatesPQ, vmDatesPQ union(byName: true)~> unionDates",
+				"selectDates sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     partitionFileNames:['dates_merged'],",
+				"     partitionFileNames:['dates'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> datescollection"
+				"     partitionBy('hash', 1)) ~> Dates"
 			]
 		}
 	}
