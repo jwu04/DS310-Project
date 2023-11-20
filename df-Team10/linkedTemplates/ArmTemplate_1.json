@@ -246,7 +246,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Cases"
@@ -352,7 +352,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Dates",
@@ -447,7 +447,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Deaths"
@@ -544,7 +544,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Policies",
@@ -615,7 +615,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Recoveries"

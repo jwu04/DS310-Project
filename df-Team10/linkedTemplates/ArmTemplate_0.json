@@ -322,13 +322,16 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"name": "[concat(parameters('factoryName'), '/ODS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ODS_Data"
 				},
 				"annotations": [],
 				"type": "Parquet",

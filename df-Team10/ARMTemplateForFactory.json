@@ -1950,13 +1950,16 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
+			"name": "[concat(parameters('factoryName'), '/ODS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ODS_Data"
 				},
 				"annotations": [],
 				"type": "Parquet",
@@ -3002,7 +3005,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Cases"
@@ -3081,7 +3084,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
 		{
@@ -3112,7 +3115,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Dates",
@@ -3182,7 +3185,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Dates_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Dates_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
 		{
@@ -3211,7 +3214,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Deaths"
@@ -3289,7 +3292,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
 		{
@@ -3312,7 +3315,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Policies",
@@ -3357,7 +3360,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
 		{
@@ -3386,7 +3389,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet1",
+								"referenceName": "ODS",
 								"type": "DatasetReference"
 							},
 							"name": "Recoveries"
@@ -3476,7 +3479,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
-				"[concat(variables('factoryId'), '/datasets/Parquet1')]"
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		}
 	]
