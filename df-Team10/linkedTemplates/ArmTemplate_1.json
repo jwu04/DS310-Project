@@ -13,49 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/VM_Country_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Source_Data"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "Country",
-						"type": "varchar"
-					},
-					{
-						"name": "CountryCode",
-						"type": "varchar"
-					},
-					{
-						"name": "Latitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					},
-					{
-						"name": "Longitude",
-						"type": "decimal",
-						"precision": 10,
-						"scale": 5
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Country"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/VM_Date_Table')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -275,14 +232,14 @@
 								"referenceName": "SQL_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "sqlmetricspq"
+							"name": "sqlMetricsPQ"
 						},
 						{
 							"dataset": {
 								"referenceName": "VM_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "vmmetricspq",
+							"name": "vmMetricsPQ",
 							"description": "Metrics from VM parquet"
 						}
 					],
@@ -292,16 +249,16 @@
 								"referenceName": "Parquet1",
 								"type": "DatasetReference"
 							},
-							"name": "cases"
+							"name": "Cases"
 						}
 					],
 					"transformations": [
 						{
-							"name": "casesunion1",
+							"name": "unionCases",
 							"description": "Combining rows from metrics sql and metrics vm"
 						},
 						{
-							"name": "choosingmetricscolumns"
+							"name": "selectCases"
 						}
 					],
 					"scriptLines": [
@@ -324,7 +281,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> sqlmetricspq",
+						"     format: 'parquet') ~> sqlMetricsPQ",
 						"source(output(",
 						"          ID as integer,",
 						"          Updated as date,",
@@ -344,9 +301,9 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> vmmetricspq",
-						"sqlmetricspq, vmmetricspq union(byName: true)~> casesunion1",
-						"casesunion1 select(mapColumn(",
+						"     format: 'parquet') ~> vmMetricsPQ",
+						"sqlMetricsPQ, vmMetricsPQ union(byName: true)~> unionCases",
+						"unionCases select(mapColumn(",
 						"          ID,",
 						"          Updated,",
 						"          Confirmed,",
@@ -354,115 +311,14 @@
 						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> choosingmetricscolumns",
-						"choosingmetricscolumns sink(allowSchemaDrift: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectCases",
+						"selectCases sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
+						"     partitionFileNames:['cases'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> cases"
-					]
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Cases Dataflow')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "SQL_Metrics_PQ",
-								"type": "DatasetReference"
-							},
-							"name": "sqlmetricspq"
-						},
-						{
-							"dataset": {
-								"referenceName": "VM_Metrics_PQ",
-								"type": "DatasetReference"
-							},
-							"name": "vmmetricspq",
-							"description": "Metrics from VM parquet"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Parquet1",
-								"type": "DatasetReference"
-							},
-							"name": "cases"
-						}
-					],
-					"transformations": [
-						{
-							"name": "casesunion1",
-							"description": "Combining rows from metrics sql and metrics vm"
-						},
-						{
-							"name": "choosingmetricscolumns"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          ID as integer,",
-						"          Updated as date,",
-						"          Confirmed as integer,",
-						"          Confirmed_Change as integer,",
-						"          Deaths as integer,",
-						"          Deaths_Change as integer,",
-						"          Recovered as integer,",
-						"          Recovered_Change as integer,",
-						"          Latitude as decimal(10,5),",
-						"          Longitude as decimal(10,5),",
-						"          ISO2 as string,",
-						"          ISO3 as string,",
-						"          Country_Region as string,",
-						"          load_time as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> sqlmetricspq",
-						"source(output(",
-						"          ID as integer,",
-						"          Updated as date,",
-						"          Confirmed as integer,",
-						"          Confirmed_Change as integer,",
-						"          Deaths as integer,",
-						"          Deaths_Change as integer,",
-						"          Recovered as integer,",
-						"          Recovered_Change as integer,",
-						"          Latitude as decimal(10,5),",
-						"          Longitude as decimal(10,5),",
-						"          ISO2 as string,",
-						"          ISO3 as string,",
-						"          Country_Region as string,",
-						"          load_time as timestamp",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> vmmetricspq",
-						"sqlmetricspq, vmmetricspq union(byName: true)~> casesunion1",
-						"casesunion1 select(mapColumn(",
-						"          ID,",
-						"          Updated,",
-						"          Confirmed,",
-						"          Confirmed_Change,",
-						"          Country_Region",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> choosingmetricscolumns",
-						"choosingmetricscolumns sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'parquet',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> cases"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Cases"
 					]
 				}
 			},
@@ -481,7 +337,7 @@
 								"referenceName": "SQL_Dates_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "datesfromsql",
+							"name": "sqlDatesPQ",
 							"description": "grab date data from sql"
 						},
 						{
@@ -489,7 +345,7 @@
 								"referenceName": "VM_Dates_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "datesfromvm",
+							"name": "vmDatesPQ",
 							"description": "grab date data from vm"
 						}
 					],
@@ -499,16 +355,16 @@
 								"referenceName": "Parquet1",
 								"type": "DatasetReference"
 							},
-							"name": "datescollection",
+							"name": "Dates",
 							"description": "dump data into dates collection"
 						}
 					],
 					"transformations": [
 						{
-							"name": "reducecolumns"
+							"name": "selectDates"
 						},
 						{
-							"name": "datesunion",
+							"name": "unionDates",
 							"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
 						}
 					],
@@ -538,12 +394,12 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> datesfromsql",
+						"     format: 'parquet') ~> sqlDatesPQ",
 						"source(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> datesfromvm",
-						"datesunion select(mapColumn(",
+						"     format: 'parquet') ~> vmDatesPQ",
+						"unionDates select(mapColumn(",
 						"          FullDate,",
 						"          isWeekDay,",
 						"          DayName,",
@@ -551,15 +407,15 @@
 						"          FiscalQuarterName",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> reducecolumns",
-						"datesfromsql, datesfromvm union(byName: true)~> datesunion",
-						"reducecolumns sink(allowSchemaDrift: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectDates",
+						"sqlDatesPQ, vmDatesPQ union(byName: true)~> unionDates",
+						"selectDates sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['dates_merged'],",
+						"     partitionFileNames:['dates'],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> datescollection"
+						"     partitionBy('hash', 1)) ~> Dates"
 					]
 				}
 			},
@@ -578,14 +434,14 @@
 								"referenceName": "SQL_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "sqlmetricspq"
+							"name": "sqlMetricsPQ"
 						},
 						{
 							"dataset": {
 								"referenceName": "VM_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "vmmetricspq"
+							"name": "vmMetricsPQ"
 						}
 					],
 					"sinks": [
@@ -594,15 +450,15 @@
 								"referenceName": "Parquet1",
 								"type": "DatasetReference"
 							},
-							"name": "sinkdeaths"
+							"name": "Deaths"
 						}
 					],
 					"transformations": [
 						{
-							"name": "uniondeaths"
+							"name": "unionDeaths"
 						},
 						{
-							"name": "selectdeaths"
+							"name": "selectDeaths"
 						}
 					],
 					"scriptLines": [
@@ -625,7 +481,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> sqlmetricspq",
+						"     format: 'parquet') ~> sqlMetricsPQ",
 						"source(output(",
 						"          ID as integer,",
 						"          Updated as date,",
@@ -645,9 +501,9 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> vmmetricspq",
-						"sqlmetricspq, vmmetricspq union(byName: true)~> uniondeaths",
-						"uniondeaths select(mapColumn(",
+						"     format: 'parquet') ~> vmMetricsPQ",
+						"sqlMetricsPQ, vmMetricsPQ union(byName: true)~> unionDeaths",
+						"unionDeaths select(mapColumn(",
 						"          ID,",
 						"          Updated,",
 						"          Deaths,",
@@ -655,12 +511,14 @@
 						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectdeaths",
-						"selectdeaths sink(allowSchemaDrift: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectDeaths",
+						"selectDeaths sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
+						"     partitionFileNames:['deaths'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sinkdeaths"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Deaths"
 					]
 				}
 			},
@@ -679,17 +537,17 @@
 								"referenceName": "Cosmos_Policy_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "policycosmos",
+							"name": "policyCosmos",
 							"description": "Grabbing Policy from Cosmos Parquet file"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Cosmos_Policy_PQ",
+								"referenceName": "Parquet1",
 								"type": "DatasetReference"
 							},
-							"name": "policycollection",
+							"name": "Policies",
 							"description": "Putting all of Policy data in Policy collection"
 						}
 					],
@@ -716,15 +574,16 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> policycosmos",
-						"policycosmos sink(allowSchemaDrift: true,",
+						"     format: 'parquet') ~> policyCosmos",
+						"policyCosmos sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
+						"     partitionFileNames:['policies'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> policycollection"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1),",
+						"     preCommands: [],",
+						"     postCommands: []) ~> Policies"
 					]
 				}
 			},
@@ -743,34 +602,34 @@
 								"referenceName": "SQL_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "source1"
+							"name": "sqlMetricsPQ"
 						},
 						{
 							"dataset": {
 								"referenceName": "VM_Metrics_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "source2"
+							"name": "vmMetricsPQ"
 						}
 					],
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "Parquet2",
+								"referenceName": "Parquet1",
 								"type": "DatasetReference"
 							},
-							"name": "sink1"
+							"name": "Recoveries"
 						}
 					],
 					"transformations": [
 						{
-							"name": "select2"
+							"name": "selectVM"
 						},
 						{
-							"name": "select3"
+							"name": "selectSQL"
 						},
 						{
-							"name": "union1"
+							"name": "unionRecoveries"
 						}
 					],
 					"scriptLines": [
@@ -793,7 +652,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> source1",
+						"     format: 'parquet') ~> sqlMetricsPQ",
 						"source(output(",
 						"          ID as integer,",
 						"          Updated as date,",
@@ -813,8 +672,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> source2",
-						"source2 select(mapColumn(",
+						"     format: 'parquet') ~> vmMetricsPQ",
+						"vmMetricsPQ select(mapColumn(",
 						"          ID,",
 						"          Updated,",
 						"          Recovered,",
@@ -822,8 +681,8 @@
 						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select2",
-						"source1 select(mapColumn(",
+						"     skipDuplicateMapOutputs: true) ~> selectVM",
+						"sqlMetricsPQ select(mapColumn(",
 						"          ID,",
 						"          Updated,",
 						"          Recovered,",
@@ -831,226 +690,19 @@
 						"          Country_Region",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select3",
-						"select3, select2 union(byName: false)~> union1",
-						"union1 sink(allowSchemaDrift: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectSQL",
+						"selectSQL, selectVM union(byName: false)~> unionRecoveries",
+						"unionRecoveries sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     input(",
-						"          FullDate as date,",
-						"          isWeekDay as boolean,",
-						"          DayName as string,",
-						"          MonthName as string,",
-						"          FiscalQuarterName as string",
-						"     ),",
 						"     format: 'parquet',",
+						"     partitionFileNames:['recoveries'],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Recoveries"
 					]
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Cases Df')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "caseflow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Cases Data Flow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"sqlmetricspq": {},
-									"vmmetricspq": {},
-									"cases": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "dates",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "caseflow1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Dates Data Flow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"datesfromsql": {},
-									"datesfromvm": {},
-									"datescollection": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "deaths",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "dates",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Deaths Data Flow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"sqlmetricspq": {},
-									"vmmetricspq": {},
-									"sinkdeaths": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "policies",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "deaths",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Policy Data Flow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"policycosmos": {},
-									"policycollection": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "recoveries",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "policies",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Recovery Data Flow",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"source1": {},
-									"source2": {},
-									"sink1": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Cases Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Copy Source Tables to Parquets')]",
@@ -2542,20 +2194,57 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Country_Table')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Date_Table')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Dates Data Flow')]",
+			"name": "[concat(parameters('factoryName'), '/Parquets to ODS')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Dates Data Flow",
+						"name": "Cases",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Cases Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sqlMetricsPQ": {},
+									"vmMetricsPQ": {},
+									"Cases": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Dates",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Cases",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2570,9 +2259,9 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"datesfromsql": {},
-									"datesfromvm": {},
-									"datescollection": {}
+									"sqlDatesPQ": {},
+									"vmDatesPQ": {},
+									"Dates": {}
 								}
 							},
 							"staging": {},
@@ -2582,27 +2271,93 @@
 							},
 							"traceLevel": "Fine"
 						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Recovery Data Flow')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
+					},
 					{
-						"name": "Data flow1",
+						"name": "Deaths",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Dates",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Deaths Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sqlMetricsPQ": {},
+									"vmMetricsPQ": {},
+									"Deaths": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Policies",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Deaths",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Policy Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"policyCosmos": {},
+									"Policies": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Recoveries",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Policies",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2617,9 +2372,9 @@
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
-									"source1": {},
-									"source2": {},
-									"sink1": {}
+									"sqlMetricsPQ": {},
+									"vmMetricsPQ": {},
+									"Recoveries": {}
 								}
 							},
 							"staging": {},
@@ -2637,6 +2392,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Cases Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]"
 			]
 		}
