@@ -864,42 +864,6 @@
 									},
 									{
 										"source": {
-											"path": "$['E1_Income support']"
-										},
-										"sink": {
-											"name": "E1_Income_support",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E1_Flag']"
-										},
-										"sink": {
-											"name": "E1_Flag",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E2_Debt contract relief']"
-										},
-										"sink": {
-											"name": "E2_Debt_contract_relief",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['E3_Fiscal measures']"
-										},
-										"sink": {
-											"name": "E3_Fiscal_measures",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
 											"path": "$['E4_International support']"
 										},
 										"sink": {
