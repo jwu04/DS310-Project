@@ -1296,7 +1296,8 @@
 											"path": "$['CountryName']"
 										},
 										"sink": {
-											"name": "CountryName"
+											"name": "CountryName",
+											"type": "String"
 										}
 									},
 									{
@@ -1304,7 +1305,8 @@
 											"path": "$['Date']"
 										},
 										"sink": {
-											"name": "Date"
+											"name": "Date",
+											"type": "String"
 										}
 									},
 									{
@@ -1312,7 +1314,8 @@
 											"path": "$['C1_School closing']"
 										},
 										"sink": {
-											"name": "C1_School closing"
+											"name": "C1_School closing",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1320,7 +1323,8 @@
 											"path": "$['C1_Flag']"
 										},
 										"sink": {
-											"name": "C1_Flag"
+											"name": "C1_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1328,7 +1332,8 @@
 											"path": "$['C2_Workplace closing']"
 										},
 										"sink": {
-											"name": "C2_Workplace closing"
+											"name": "C2_Workplace closing",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1336,7 +1341,8 @@
 											"path": "$['C2_Flag']"
 										},
 										"sink": {
-											"name": "C2_Flag"
+											"name": "C2_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1344,7 +1350,8 @@
 											"path": "$['C3_Cancel public events']"
 										},
 										"sink": {
-											"name": "C3_Cancel public events"
+											"name": "C3_Cancel public events",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1352,7 +1359,8 @@
 											"path": "$['C3_Flag']"
 										},
 										"sink": {
-											"name": "C3_Flag"
+											"name": "C3_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1360,7 +1368,8 @@
 											"path": "$['C4_Restrictions on gatherings']"
 										},
 										"sink": {
-											"name": "C4_Restrictions on gatherings"
+											"name": "C4_Restrictions on gatherings",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1368,7 +1377,8 @@
 											"path": "$['C4_Flag']"
 										},
 										"sink": {
-											"name": "C4_Flag"
+											"name": "C4_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1376,7 +1386,8 @@
 											"path": "$['C5_Close public transport']"
 										},
 										"sink": {
-											"name": "C5_Close public transport"
+											"name": "C5_Close public transport",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1384,7 +1395,8 @@
 											"path": "$['C5_Flag']"
 										},
 										"sink": {
-											"name": "C5_Flag"
+											"name": "C5_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1392,7 +1404,8 @@
 											"path": "$['C6_Stay at home requirements']"
 										},
 										"sink": {
-											"name": "C6_Stay at home requirements"
+											"name": "C6_Stay at home requirements",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1400,7 +1413,8 @@
 											"path": "$['C6_Flag']"
 										},
 										"sink": {
-											"name": "C6_Flag"
+											"name": "C6_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1408,7 +1422,8 @@
 											"path": "$['C7_Restrictions on internal movement']"
 										},
 										"sink": {
-											"name": "C7_Restrictions on internal movement"
+											"name": "C7_Restrictions on internal movement",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1416,7 +1431,8 @@
 											"path": "$['C7_Flag']"
 										},
 										"sink": {
-											"name": "C7_Flag"
+											"name": "C7_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1424,7 +1440,8 @@
 											"path": "$['C8_International travel controls']"
 										},
 										"sink": {
-											"name": "C8_International travel controls"
+											"name": "C8_International travel controls",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1432,7 +1449,8 @@
 											"path": "$['E1_Income support']"
 										},
 										"sink": {
-											"name": "E1_Income support"
+											"name": "E1_Income support",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1440,7 +1458,8 @@
 											"path": "$['E1_Flag']"
 										},
 										"sink": {
-											"name": "E1_Flag"
+											"name": "E1_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1448,7 +1467,8 @@
 											"path": "$['E2_Debt contract relief']"
 										},
 										"sink": {
-											"name": "E2_Debt contract relief"
+											"name": "E2_Debt contract relief",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1456,7 +1476,8 @@
 											"path": "$['E3_Fiscal measures']"
 										},
 										"sink": {
-											"name": "E3_Fiscal measures"
+											"name": "E3_Fiscal measures",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1464,7 +1485,8 @@
 											"path": "$['E4_International support']"
 										},
 										"sink": {
-											"name": "E4_International support"
+											"name": "E4_International support",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1472,7 +1494,8 @@
 											"path": "$['H1_Public information campaigns']"
 										},
 										"sink": {
-											"name": "H1_Public information campaigns"
+											"name": "H1_Public information campaigns",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1480,7 +1503,8 @@
 											"path": "$['H1_Flag']"
 										},
 										"sink": {
-											"name": "H1_Flag"
+											"name": "H1_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1488,7 +1512,8 @@
 											"path": "$['H2_Testing policy']"
 										},
 										"sink": {
-											"name": "H2_Testing policy"
+											"name": "H2_Testing policy",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1496,7 +1521,8 @@
 											"path": "$['H3_Contact tracing']"
 										},
 										"sink": {
-											"name": "H3_Contact tracing"
+											"name": "H3_Contact tracing",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1504,7 +1530,8 @@
 											"path": "$['H4_Emergency_investment_in_healthcare']"
 										},
 										"sink": {
-											"name": "H4_Emergency_investment_in_healthcare"
+											"name": "H4_Emergency_investment_in_healthcare",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1512,7 +1539,8 @@
 											"path": "$['H5_Investment_in_vaccines']"
 										},
 										"sink": {
-											"name": "H5_Investment_in_vaccines"
+											"name": "H5_Investment_in_vaccines",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1520,7 +1548,8 @@
 											"path": "$['H6_Facial_Coverings']"
 										},
 										"sink": {
-											"name": "H6_Facial_Coverings"
+											"name": "H6_Facial_Coverings",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1528,7 +1557,8 @@
 											"path": "$['H6_Flag']"
 										},
 										"sink": {
-											"name": "H6_Flag"
+											"name": "H6_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1536,7 +1566,8 @@
 											"path": "$['H7_Vaccination policy']"
 										},
 										"sink": {
-											"name": "H7_Vaccination policy"
+											"name": "H7_Vaccination policy",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1544,7 +1575,8 @@
 											"path": "$['H7_Flag']"
 										},
 										"sink": {
-											"name": "H7_Flag"
+											"name": "H7_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1552,7 +1584,8 @@
 											"path": "$['H8_Protection of elderly people']"
 										},
 										"sink": {
-											"name": "H8_Protection of elderly people"
+											"name": "H8_Protection of elderly people",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1560,7 +1593,8 @@
 											"path": "$['H8_Flag']"
 										},
 										"sink": {
-											"name": "H8_Flag"
+											"name": "H8_Flag",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1568,7 +1602,8 @@
 											"path": "$['H4_Emergency investment in healthcare']"
 										},
 										"sink": {
-											"name": "H4_Emergency investment in healthcare"
+											"name": "H4_Emergency investment in healthcare",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1576,7 +1611,8 @@
 											"path": "$['H5_Investment in vaccines']"
 										},
 										"sink": {
-											"name": "H5_Investment in vaccines"
+											"name": "H5_Investment in vaccines",
+											"type": "Int32"
 										}
 									},
 									{
@@ -1584,7 +1620,8 @@
 											"path": "$['H6_Facial Coverings']"
 										},
 										"sink": {
-											"name": "H6_Facial Coverings"
+											"name": "H6_Facial Coverings",
+											"type": "Int32"
 										}
 									}
 								],
