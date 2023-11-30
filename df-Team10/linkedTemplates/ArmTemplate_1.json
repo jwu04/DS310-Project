@@ -339,7 +339,7 @@
 								"referenceName": "SQL_Country_PQ",
 								"type": "DatasetReference"
 							},
-							"name": "SQLCountryPQ"
+							"name": "sqlCountryPQ"
 						}
 					],
 					"sinks": [
@@ -366,8 +366,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> SQLCountryPQ",
-						"SQLCountryPQ select(mapColumn(",
+						"     format: 'parquet') ~> sqlCountryPQ",
+						"sqlCountryPQ select(mapColumn(",
 						"          Country,",
 						"          Latitude,",
 						"          Longitude",
@@ -2248,6 +2248,43 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "Geography",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Recoveries",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Geography Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sqlCountryPQ": {},
+									"Geography": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -2260,7 +2297,8 @@
 				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]"
+				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Geography Data Flow')]"
 			]
 		}
 	]
