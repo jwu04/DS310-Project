@@ -3347,6 +3347,9 @@
 						},
 						{
 							"name": "unionCountry"
+						},
+						{
+							"name": "aggregate1"
 						}
 					],
 					"scriptLines": [
@@ -3372,7 +3375,10 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> SelectCountry",
 						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
-						"SelectCountry sink(allowSchemaDrift: true,",
+						"SelectCountry aggregate(groupBy(Latitude,",
+						"          Longitude),",
+						"     Country = max(Country)) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['geography'],",
