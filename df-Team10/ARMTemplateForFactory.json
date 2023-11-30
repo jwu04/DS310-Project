@@ -3460,6 +3460,70 @@
 				"[concat(variables('factoryId'), '/datasets/VM_Metrics_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Country_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "SQLCountryPQ"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ODS",
+								"type": "DatasetReference"
+							},
+							"name": "Geography"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SelectCountry"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Country as string,",
+						"          CountryCode as string,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5)",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> SQLCountryPQ",
+						"SQLCountryPQ select(mapColumn(",
+						"          Country,",
+						"          Latitude,",
+						"          Longitude",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> SelectCountry",
+						"SelectCountry sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> Geography"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Country_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
+			]
 		}
 	]
 }
