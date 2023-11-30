@@ -62,7 +62,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Dates",
+						"activity": "Cases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -93,7 +93,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Deaths",
+						"activity": "Cases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -124,7 +124,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Policies",
+						"activity": "Cases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -155,7 +155,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Recoveries",
+						"activity": "Cases",
 						"dependencyConditions": [
 							"Succeeded"
 						]
