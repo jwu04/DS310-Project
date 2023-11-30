@@ -340,6 +340,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "sqlCountryPQ"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Country_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "vmCountryPQ"
 						}
 					],
 					"sinks": [
@@ -354,6 +361,9 @@
 					"transformations": [
 						{
 							"name": "SelectCountry"
+						},
+						{
+							"name": "unionCountry"
 						}
 					],
 					"scriptLines": [
@@ -367,13 +377,18 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     format: 'parquet') ~> sqlCountryPQ",
-						"sqlCountryPQ select(mapColumn(",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> vmCountryPQ",
+						"unionCountry select(mapColumn(",
 						"          Country,",
 						"          Latitude,",
 						"          Longitude",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> SelectCountry",
+						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
 						"SelectCountry sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
@@ -2277,6 +2292,7 @@
 								"parameters": {},
 								"datasetParameters": {
 									"sqlCountryPQ": {},
+									"vmCountryPQ": {},
 									"Geography": {}
 								}
 							},
