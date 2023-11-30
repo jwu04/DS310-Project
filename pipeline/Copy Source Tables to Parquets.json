@@ -682,7 +682,7 @@
 								},
 								"sink": {
 									"name": "Date",
-									"type": "String"
+									"type": "Date"
 								}
 							},
 							{
