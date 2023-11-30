@@ -888,7 +888,7 @@
 									"path": "$['H2_Testing policy']"
 								},
 								"sink": {
-									"name": "H2_Testing policy",
+									"name": "H2_Testing_policy",
 									"type": "Int32"
 								}
 							},
@@ -897,7 +897,7 @@
 									"path": "$['H3_Contact tracing']"
 								},
 								"sink": {
-									"name": "H3_Contact tracing",
+									"name": "H3_Contact_tracing",
 									"type": "Int32"
 								}
 							},
