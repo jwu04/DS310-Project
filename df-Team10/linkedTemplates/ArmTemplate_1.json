@@ -52,6 +52,9 @@
 						},
 						{
 							"name": "selectCases"
+						},
+						{
+							"name": "selectDistinctRows"
 						}
 					],
 					"scriptLines": [
@@ -105,10 +108,13 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectCases",
-						"selectCases sink(allowSchemaDrift: true,",
+						"selectCases aggregate(groupBy(ID),",
+						"     each(match(name!='ID'), $$ = first($$))) ~> selectDistinctRows",
+						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['cases'],",
+						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -162,6 +168,9 @@
 						{
 							"name": "unionDates",
 							"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+						},
+						{
+							"name": "selectDistinctRows"
 						}
 					],
 					"scriptLines": [
@@ -205,7 +214,9 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectDates",
 						"sqlDatesPQ, vmDatesPQ union(byName: true)~> unionDates",
-						"selectDates sink(allowSchemaDrift: true,",
+						"selectDates aggregate(groupBy(FullDate),",
+						"     each(match(name!='FullDate'), $$ = first($$))) ~> selectDistinctRows",
+						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['dates'],",
@@ -258,6 +269,9 @@
 						},
 						{
 							"name": "selectDeaths"
+						},
+						{
+							"name": "selectDistinctRows"
 						}
 					],
 					"scriptLines": [
@@ -311,7 +325,9 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectDeaths",
-						"selectDeaths sink(allowSchemaDrift: true,",
+						"selectDeaths aggregate(groupBy(ID),",
+						"     each(match(name!='ID'), $$ = first($$))) ~> selectDistinctRows",
+						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['deaths'],",
@@ -360,13 +376,13 @@
 					],
 					"transformations": [
 						{
-							"name": "SelectCountry"
+							"name": "selectCountry"
 						},
 						{
 							"name": "unionCountry"
 						},
 						{
-							"name": "aggregate1"
+							"name": "selectDistinctRows"
 						}
 					],
 					"scriptLines": [
@@ -390,12 +406,11 @@
 						"          Longitude",
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> SelectCountry",
+						"     skipDuplicateMapOutputs: true) ~> selectCountry",
 						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
-						"SelectCountry aggregate(groupBy(Latitude,",
-						"          Longitude),",
-						"     Country = max(Country)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"selectCountry aggregate(groupBy(Country),",
+						"     each(match(name!='Country'), $$ = first($$))) ~> selectDistinctRows",
+						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['geography'],",
@@ -517,6 +532,9 @@
 						},
 						{
 							"name": "unionRecoveries"
+						},
+						{
+							"name": "selectDistinctRows"
 						}
 					],
 					"scriptLines": [
@@ -579,7 +597,9 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> selectSQL",
 						"selectSQL, selectVM union(byName: false)~> unionRecoveries",
-						"unionRecoveries sink(allowSchemaDrift: true,",
+						"unionRecoveries aggregate(groupBy(ID),",
+						"     each(match(name!='ID'), $$ = first($$))) ~> selectDistinctRows",
+						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
 						"     partitionFileNames:['recoveries'],",
