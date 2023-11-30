@@ -34,6 +34,9 @@
 				},
 				{
 					"name": "selectDeaths"
+				},
+				{
+					"name": "selectDistinctRows"
 				}
 			],
 			"scriptLines": [
@@ -87,10 +90,15 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectDeaths",
-				"selectDeaths sink(allowSchemaDrift: true,",
+				"selectDeaths aggregate(groupBy(ID),",
+				"     each(match(name != 'ID'), $$ = first($$))) ~> selectDistinctRows",
+				"selectDistinctRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     partitionFileNames:['deaths'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> Deaths"

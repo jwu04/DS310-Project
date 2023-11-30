@@ -38,6 +38,9 @@
 				{
 					"name": "unionDates",
 					"description": "Combining rows from transformation 'datesfromsql' and 'datesfromvm'"
+				},
+				{
+					"name": "selectDistinctRows"
 				}
 			],
 			"scriptLines": [
@@ -81,10 +84,15 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectDates",
 				"sqlDatesPQ, vmDatesPQ union(byName: true)~> unionDates",
-				"selectDates sink(allowSchemaDrift: true,",
+				"selectDates aggregate(groupBy(FullDate),",
+				"     each(match(name != 'FullDate'), $$ = first($$))) ~> selectDistinctRows",
+				"selectDistinctRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     partitionFileNames:['dates'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> Dates"

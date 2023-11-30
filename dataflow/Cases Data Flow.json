@@ -36,6 +36,9 @@
 				},
 				{
 					"name": "selectCases"
+				},
+				{
+					"name": "selectDistinctRows"
 				}
 			],
 			"scriptLines": [
@@ -89,10 +92,16 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectCases",
-				"selectCases sink(allowSchemaDrift: true,",
+				"selectCases aggregate(groupBy(ID),",
+				"     each(match(name != 'ID'), $$ = first($$))) ~> selectDistinctRows",
+				"selectDistinctRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     partitionFileNames:['cases'],",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> Cases"
