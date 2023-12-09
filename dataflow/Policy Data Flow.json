@@ -68,7 +68,7 @@
 				"policyCosmos sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
-				"     partitionFileNames:['policies'],",
+				"     partitionFileNames:['policies.parquet'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",

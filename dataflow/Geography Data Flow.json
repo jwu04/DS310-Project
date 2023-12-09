@@ -17,13 +17,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "vmCountryPQ"
-				},
-				{
-					"dataset": {
-						"referenceName": "Country_Population_Data",
-						"type": "DatasetReference"
-					},
-					"name": "PopulationData"
 				}
 			],
 			"sinks": [
@@ -44,12 +37,6 @@
 				},
 				{
 					"name": "selectDistinctRows"
-				},
-				{
-					"name": "selectColumns"
-				},
-				{
-					"name": "joinOnCountry"
 				}
 			],
 			"scriptLines": [
@@ -67,13 +54,6 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> vmCountryPQ",
-				"source(output(",
-				"          Country as string,",
-				"          Population as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> PopulationData",
 				"unionCountry select(mapColumn(",
 				"          Country,",
 				"          Latitude,",
@@ -84,25 +64,16 @@
 				"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
 				"selectCountry aggregate(groupBy(Country),",
 				"     each(match(name!='Country'), $$ = first($$))) ~> selectDistinctRows",
-				"joinOnCountry select(mapColumn(",
-				"          Country = PopulationData@Country,",
-				"          Population",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> selectColumns",
-				"PopulationData, selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
-				"     joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> joinOnCountry",
 				"selectDistinctRows sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
+				"     partitionFileNames:['geography.parquet'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> Geography"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> Geography"
 			]
 		}
 	}
