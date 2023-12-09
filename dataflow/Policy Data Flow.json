@@ -27,7 +27,7 @@
 			"scriptLines": [
 				"source(output(",
 				"          CountryName as string,",
-				"          Date as timestamp,",
+				"          Date as date,",
 				"          C1_School_closing as integer,",
 				"          C1_Flag as integer,",
 				"          C2_Workplace_closing as integer,",
