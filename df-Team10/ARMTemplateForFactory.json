@@ -3836,7 +3836,7 @@
 						"selectColumns sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['population.parquet'],",
+						"     partitionFileNames:['population'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
