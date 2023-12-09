@@ -1,5 +1,5 @@
 {
-	"name": "Geography Data Flow",
+	"name": "Population Data Flow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -17,16 +17,16 @@
 						"type": "DatasetReference"
 					},
 					"name": "vmCountryPQ"
+				},
+				{
+					"dataset": {
+						"referenceName": "Country_Population_Data",
+						"type": "DatasetReference"
+					},
+					"name": "PopulationData"
 				}
 			],
 			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "ODS",
-						"type": "DatasetReference"
-					},
-					"name": "Geography"
-				},
 				{
 					"dataset": {
 						"referenceName": "ODS",
@@ -67,6 +67,13 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     format: 'parquet') ~> vmCountryPQ",
+				"source(output(",
+				"          Country as string,",
+				"          Population as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> PopulationData",
 				"unionCountry select(mapColumn(",
 				"          Country,",
 				"          Latitude,",
@@ -83,21 +90,11 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectColumns",
-				"selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
+				"PopulationData, selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joinOnCountry",
-				"selectDistinctRows sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     format: 'parquet',",
-				"     partitionFileNames:['geography'],",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> Geography",
 				"selectColumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
