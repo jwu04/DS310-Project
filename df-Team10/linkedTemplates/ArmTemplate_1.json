@@ -363,7 +363,7 @@
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['cases'],",
+						"     partitionFileNames:['cases.parquet'],",
 						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -469,7 +469,7 @@
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['dates'],",
+						"     partitionFileNames:['dates.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -580,7 +580,7 @@
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['deaths'],",
+						"     partitionFileNames:['deaths.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -613,13 +613,6 @@
 								"type": "DatasetReference"
 							},
 							"name": "vmCountryPQ"
-						},
-						{
-							"dataset": {
-								"referenceName": "Country_Population_Data",
-								"type": "DatasetReference"
-							},
-							"name": "PopulationData"
 						}
 					],
 					"sinks": [
@@ -640,12 +633,6 @@
 						},
 						{
 							"name": "selectDistinctRows"
-						},
-						{
-							"name": "selectColumns"
-						},
-						{
-							"name": "joinOnCountry"
 						}
 					],
 					"scriptLines": [
@@ -663,13 +650,6 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     format: 'parquet') ~> vmCountryPQ",
-						"source(output(",
-						"          Country as string,",
-						"          Population as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> PopulationData",
 						"unionCountry select(mapColumn(",
 						"          Country,",
 						"          Latitude,",
@@ -680,25 +660,16 @@
 						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
 						"selectCountry aggregate(groupBy(Country),",
 						"     each(match(name!='Country'), $$ = first($$))) ~> selectDistinctRows",
-						"joinOnCountry select(mapColumn(",
-						"          Country = PopulationData@Country,",
-						"          Population",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> selectColumns",
-						"PopulationData, selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joinOnCountry",
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
+						"     partitionFileNames:['geography.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> Geography"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Geography"
 					]
 				}
 			},
@@ -735,7 +706,7 @@
 					"scriptLines": [
 						"source(output(",
 						"          CountryName as string,",
-						"          Date as timestamp,",
+						"          Date as date,",
 						"          C1_School_closing as integer,",
 						"          C1_Flag as integer,",
 						"          C2_Workplace_closing as integer,",
@@ -776,7 +747,7 @@
 						"policyCosmos sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['policies'],",
+						"     partitionFileNames:['policies.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -890,7 +861,7 @@
 						"selectColumns sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['population'],",
+						"     partitionFileNames:['population.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -1013,7 +984,7 @@
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['recoveries'],",
+						"     partitionFileNames:['recoveries.parquet'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -2816,7 +2787,6 @@
 								"datasetParameters": {
 									"sqlCountryPQ": {},
 									"vmCountryPQ": {},
-									"PopulationData": {},
 									"Geography": {}
 								}
 							},
@@ -2827,32 +2797,18 @@
 							},
 							"traceLevel": "Fine"
 						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Cases Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]",
-				"[concat(variables('factoryId'), '/dataflows/Geography Data Flow')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Population to Parquet')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
+					},
 					{
-						"name": "Population",
+						"name": "Data flow1",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "Cases",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -2888,6 +2844,12 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Cases Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Dates Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Deaths Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]",
+				"[concat(variables('factoryId'), '/dataflows/Geography Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Population Data Flow')]"
 			]
 		}
