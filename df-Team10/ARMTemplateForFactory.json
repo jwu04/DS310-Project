@@ -1842,6 +1842,7 @@
 								"datasetParameters": {
 									"sqlCountryPQ": {},
 									"vmCountryPQ": {},
+									"PopulationData": {},
 									"Geography": {}
 								}
 							},
@@ -1866,6 +1867,54 @@
 				"[concat(variables('factoryId'), '/dataflows/Policy Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Recovery Data Flow')]",
 				"[concat(variables('factoryId'), '/dataflows/Geography Data Flow')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Population to Parquet')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Population",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Population Data Flow",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sqlCountryPQ": {},
+									"vmCountryPQ": {},
+									"PopulationData": {},
+									"Population": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Population Data Flow')]"
 			]
 		},
 		{
@@ -3502,6 +3551,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "vmCountryPQ"
+						},
+						{
+							"dataset": {
+								"referenceName": "Country_Population_Data",
+								"type": "DatasetReference"
+							},
+							"name": "PopulationData"
 						}
 					],
 					"sinks": [
@@ -3522,6 +3578,12 @@
 						},
 						{
 							"name": "selectDistinctRows"
+						},
+						{
+							"name": "selectColumns"
+						},
+						{
+							"name": "joinOnCountry"
 						}
 					],
 					"scriptLines": [
@@ -3539,6 +3601,13 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     format: 'parquet') ~> vmCountryPQ",
+						"source(output(",
+						"          Country as string,",
+						"          Population as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> PopulationData",
 						"unionCountry select(mapColumn(",
 						"          Country,",
 						"          Latitude,",
@@ -3549,22 +3618,32 @@
 						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
 						"selectCountry aggregate(groupBy(Country),",
 						"     each(match(name!='Country'), $$ = first($$))) ~> selectDistinctRows",
+						"joinOnCountry select(mapColumn(",
+						"          Country = PopulationData@Country,",
+						"          Population",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectColumns",
+						"PopulationData, selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joinOnCountry",
 						"selectDistinctRows sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     format: 'parquet',",
-						"     partitionFileNames:['geography'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> Geography"
+						"     skipDuplicateMapOutputs: true) ~> Geography"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SQL_Country_PQ')]",
 				"[concat(variables('factoryId'), '/datasets/VM_Country_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/Country_Population_Data')]",
 				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
@@ -3652,6 +3731,125 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Cosmos_Policy_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/ODS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Population Data Flow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SQL_Country_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "sqlCountryPQ"
+						},
+						{
+							"dataset": {
+								"referenceName": "VM_Country_PQ",
+								"type": "DatasetReference"
+							},
+							"name": "vmCountryPQ"
+						},
+						{
+							"dataset": {
+								"referenceName": "Country_Population_Data",
+								"type": "DatasetReference"
+							},
+							"name": "PopulationData"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ODS",
+								"type": "DatasetReference"
+							},
+							"name": "Population"
+						}
+					],
+					"transformations": [
+						{
+							"name": "selectCountry"
+						},
+						{
+							"name": "unionCountry"
+						},
+						{
+							"name": "selectDistinctRows"
+						},
+						{
+							"name": "selectColumns"
+						},
+						{
+							"name": "joinOnCountry"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Country as string,",
+						"          CountryCode as string,",
+						"          Latitude as decimal(10,5),",
+						"          Longitude as decimal(10,5)",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> sqlCountryPQ",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> vmCountryPQ",
+						"source(output(",
+						"          Country as string,",
+						"          Population as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> PopulationData",
+						"unionCountry select(mapColumn(",
+						"          Country,",
+						"          Latitude,",
+						"          Longitude",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectCountry",
+						"sqlCountryPQ, vmCountryPQ union(byName: true)~> unionCountry",
+						"selectCountry aggregate(groupBy(Country),",
+						"     each(match(name!='Country'), $$ = first($$))) ~> selectDistinctRows",
+						"joinOnCountry select(mapColumn(",
+						"          Country = PopulationData@Country,",
+						"          Population",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectColumns",
+						"PopulationData, selectDistinctRows join(PopulationData@Country == selectDistinctRows@Country,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joinOnCountry",
+						"selectColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['population.parquet'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> Population"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQL_Country_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/VM_Country_PQ')]",
+				"[concat(variables('factoryId'), '/datasets/Country_Population_Data')]",
 				"[concat(variables('factoryId'), '/datasets/ODS')]"
 			]
 		},
