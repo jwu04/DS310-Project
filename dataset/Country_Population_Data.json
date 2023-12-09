@@ -2,7 +2,7 @@
 	"name": "Country_Population_Data",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage2",
+			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -12,9 +12,9 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": "country_population_data.csv",
-				"container": "sql-database"
+				"fileSystem": "sql-database"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
