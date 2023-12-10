@@ -1176,7 +1176,7 @@
 											"path": "$['C7_Restrictions on internal movement']"
 										},
 										"sink": {
-											"name": "C7_Restrictions_on_internal movement"
+											"name": "C7_Restrictions_on_internal_movement"
 										}
 									},
 									{
