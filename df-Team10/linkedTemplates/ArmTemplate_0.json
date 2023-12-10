@@ -1160,7 +1160,7 @@
 											"path": "$['C6_Stay at home requirements']"
 										},
 										"sink": {
-											"name": "C6_Stay_at_home requirements"
+											"name": "C6_Stay_at_home_requirements"
 										}
 									},
 									{
@@ -1200,7 +1200,7 @@
 											"path": "$['E1_Income support']"
 										},
 										"sink": {
-											"name": "E1_Income support"
+											"name": "E1_Income_support"
 										}
 									},
 									{
