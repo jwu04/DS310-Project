@@ -1068,18 +1068,11 @@
 									},
 									{
 										"source": {
-											"path": "$['Jurisdiction']"
-										},
-										"sink": {
-											"name": "Jurisdiction"
-										}
-									},
-									{
-										"source": {
 											"path": "$['Date']"
 										},
 										"sink": {
-											"name": "Date"
+											"name": "Date",
+											"type": "Date"
 										}
 									},
 									{
@@ -1087,7 +1080,7 @@
 											"path": "$['C1_School closing']"
 										},
 										"sink": {
-											"name": "C1_School closing"
+											"name": "C1_School_closing"
 										}
 									},
 									{
@@ -1103,7 +1096,7 @@
 											"path": "$['C2_Workplace closing']"
 										},
 										"sink": {
-											"name": "C2_Workplace closing"
+											"name": "C2_Workplace_closing"
 										}
 									},
 									{
@@ -1119,7 +1112,7 @@
 											"path": "$['C3_Cancel public events']"
 										},
 										"sink": {
-											"name": "C3_Cancel public events"
+											"name": "C3_Cancel_public_events"
 										}
 									},
 									{
@@ -1135,7 +1128,7 @@
 											"path": "$['C4_Restrictions on gatherings']"
 										},
 										"sink": {
-											"name": "C4_Restrictions on gatherings"
+											"name": "C4_Restrictions_on_gatherings"
 										}
 									},
 									{
@@ -1151,7 +1144,7 @@
 											"path": "$['C5_Close public transport']"
 										},
 										"sink": {
-											"name": "C5_Close public transport"
+											"name": "C5_Close_public_transport"
 										}
 									},
 									{
@@ -1167,7 +1160,7 @@
 											"path": "$['C6_Stay at home requirements']"
 										},
 										"sink": {
-											"name": "C6_Stay at home requirements"
+											"name": "C6_Stay_at_home requirements"
 										}
 									},
 									{
@@ -1183,7 +1176,7 @@
 											"path": "$['C7_Restrictions on internal movement']"
 										},
 										"sink": {
-											"name": "C7_Restrictions on internal movement"
+											"name": "C7_Restrictions_on_internal movement"
 										}
 									},
 									{
@@ -1199,7 +1192,7 @@
 											"path": "$['C8_International travel controls']"
 										},
 										"sink": {
-											"name": "C8_International travel controls"
+											"name": "C8_International_travel_controls"
 										}
 									},
 									{
@@ -1223,7 +1216,7 @@
 											"path": "$['E2_Debt contract relief']"
 										},
 										"sink": {
-											"name": "E2_Debt contract relief"
+											"name": "E2_Debt_contract_relief"
 										}
 									},
 									{
@@ -1231,7 +1224,7 @@
 											"path": "$['E3_Fiscal measures']"
 										},
 										"sink": {
-											"name": "E3_Fiscal measures"
+											"name": "E3_Fiscal_measures"
 										}
 									},
 									{
@@ -1239,7 +1232,7 @@
 											"path": "$['E4_International support']"
 										},
 										"sink": {
-											"name": "E4_International support"
+											"name": "E4_International_support"
 										}
 									},
 									{
@@ -1247,7 +1240,7 @@
 											"path": "$['H1_Public information campaigns']"
 										},
 										"sink": {
-											"name": "H1_Public information campaigns"
+											"name": "H1_Public_information_campaigns"
 										}
 									},
 									{
@@ -1263,7 +1256,7 @@
 											"path": "$['H2_Testing policy']"
 										},
 										"sink": {
-											"name": "H2_Testing policy"
+											"name": "H2_Testing_policy"
 										}
 									},
 									{
@@ -1271,7 +1264,7 @@
 											"path": "$['H3_Contact tracing']"
 										},
 										"sink": {
-											"name": "H3_Contact tracing"
+											"name": "H3_Contact_tracing"
 										}
 									},
 									{
@@ -1311,7 +1304,7 @@
 											"path": "$['H7_Vaccination policy']"
 										},
 										"sink": {
-											"name": "H7_Vaccination policy"
+											"name": "H7_Vaccination_policy"
 										}
 									},
 									{
@@ -1327,7 +1320,7 @@
 											"path": "$['H8_Protection of elderly people']"
 										},
 										"sink": {
-											"name": "H8_Protection of elderly people"
+											"name": "H8_Protection_of_elderly_people"
 										}
 									},
 									{
