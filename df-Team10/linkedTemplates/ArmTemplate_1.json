@@ -13,121 +13,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/VM_Date_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer2",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Source_Data"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "DateKey",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FullDate",
-						"type": "date"
-					},
-					{
-						"name": "isWeekDay",
-						"type": "bit"
-					},
-					{
-						"name": "DayOfWeek",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "DayName",
-						"type": "varchar"
-					},
-					{
-						"name": "WeekOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "WeekName",
-						"type": "varchar"
-					},
-					{
-						"name": "MonthOfYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "MonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CalendarQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "CalendarYear",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonth",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalMonthName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalQuarter",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "FiscalQuarterName",
-						"type": "varchar"
-					},
-					{
-						"name": "FiscalYear",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dates"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/VM_Metrics_Table')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -661,34 +546,7 @@
 					],
 					"transformations": [],
 					"scriptLines": [
-						"source(output(",
-						"          CountryName as string,",
-						"          Date as timestamp,",
-						"          C1_School_closing as integer,",
-						"          C1_Flag as integer,",
-						"          C2_Workplace_closing as integer,",
-						"          C2_Flag as integer,",
-						"          C3_Cancel_public_events as integer,",
-						"          C3_Flag as integer,",
-						"          C4_Restrictions_on_gatherings as integer,",
-						"          C4_Flag as integer,",
-						"          C5_Close_public_transport as integer,",
-						"          C5_Flag as integer,",
-						"          C6_Stay_at_home_requirements as integer,",
-						"          C6_Flag as integer,",
-						"          C7_Restrictions_on_internal_movement as integer,",
-						"          C7_Flag as integer,",
-						"          C8_International_travel_controls as integer,",
-						"          H1_Public_information_campaigns as integer,",
-						"          H1_Flag as integer,",
-						"          H2_Testing_policy as integer,",
-						"          H3_Contact_tracing as integer,",
-						"          H7_Vaccination_policy as integer,",
-						"          H7_Flag as integer,",
-						"          H8_Protection_of_elderly_people as integer,",
-						"          H8_Flag as integer",
-						"     ),",
-						"     allowSchemaDrift: true,",
+						"source(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false,",
 						"     format: 'parquet') ~> policyCosmos",
@@ -1631,18 +1489,11 @@
 									},
 									{
 										"source": {
-											"path": "$['Jurisdiction']"
-										},
-										"sink": {
-											"name": "Jurisdiction"
-										}
-									},
-									{
-										"source": {
 											"path": "$['Date']"
 										},
 										"sink": {
-											"name": "Date"
+											"name": "Date",
+											"type": "Date"
 										}
 									},
 									{
@@ -1650,7 +1501,7 @@
 											"path": "$['C1_School closing']"
 										},
 										"sink": {
-											"name": "C1_School closing"
+											"name": "C1_School_closing"
 										}
 									},
 									{
@@ -1666,7 +1517,7 @@
 											"path": "$['C2_Workplace closing']"
 										},
 										"sink": {
-											"name": "C2_Workplace closing"
+											"name": "C2_Workplace_closing"
 										}
 									},
 									{
@@ -1682,7 +1533,7 @@
 											"path": "$['C3_Cancel public events']"
 										},
 										"sink": {
-											"name": "C3_Cancel public events"
+											"name": "C3_Cancel_public_events"
 										}
 									},
 									{
@@ -1698,7 +1549,7 @@
 											"path": "$['C4_Restrictions on gatherings']"
 										},
 										"sink": {
-											"name": "C4_Restrictions on gatherings"
+											"name": "C4_Restrictions_on_gatherings"
 										}
 									},
 									{
@@ -1714,7 +1565,7 @@
 											"path": "$['C5_Close public transport']"
 										},
 										"sink": {
-											"name": "C5_Close public transport"
+											"name": "C5_Close_public_transport"
 										}
 									},
 									{
@@ -1730,7 +1581,7 @@
 											"path": "$['C6_Stay at home requirements']"
 										},
 										"sink": {
-											"name": "C6_Stay at home requirements"
+											"name": "C6_Stay_at_home_requirements"
 										}
 									},
 									{
@@ -1746,7 +1597,7 @@
 											"path": "$['C7_Restrictions on internal movement']"
 										},
 										"sink": {
-											"name": "C7_Restrictions on internal movement"
+											"name": "C7_Restrictions_on_internal_movement"
 										}
 									},
 									{
@@ -1762,7 +1613,7 @@
 											"path": "$['C8_International travel controls']"
 										},
 										"sink": {
-											"name": "C8_International travel controls"
+											"name": "C8_International_travel_controls"
 										}
 									},
 									{
@@ -1770,7 +1621,7 @@
 											"path": "$['E1_Income support']"
 										},
 										"sink": {
-											"name": "E1_Income support"
+											"name": "E1_Income_support"
 										}
 									},
 									{
@@ -1786,7 +1637,7 @@
 											"path": "$['E2_Debt contract relief']"
 										},
 										"sink": {
-											"name": "E2_Debt contract relief"
+											"name": "E2_Debt_contract_relief"
 										}
 									},
 									{
@@ -1794,7 +1645,7 @@
 											"path": "$['E3_Fiscal measures']"
 										},
 										"sink": {
-											"name": "E3_Fiscal measures"
+											"name": "E3_Fiscal_measures"
 										}
 									},
 									{
@@ -1802,7 +1653,7 @@
 											"path": "$['E4_International support']"
 										},
 										"sink": {
-											"name": "E4_International support"
+											"name": "E4_International_support"
 										}
 									},
 									{
@@ -1810,7 +1661,7 @@
 											"path": "$['H1_Public information campaigns']"
 										},
 										"sink": {
-											"name": "H1_Public information campaigns"
+											"name": "H1_Public_information_campaigns"
 										}
 									},
 									{
@@ -1826,7 +1677,7 @@
 											"path": "$['H2_Testing policy']"
 										},
 										"sink": {
-											"name": "H2_Testing policy"
+											"name": "H2_Testing_policy"
 										}
 									},
 									{
@@ -1834,7 +1685,7 @@
 											"path": "$['H3_Contact tracing']"
 										},
 										"sink": {
-											"name": "H3_Contact tracing"
+											"name": "H3_Contact_tracing"
 										}
 									},
 									{
@@ -1874,7 +1725,7 @@
 											"path": "$['H7_Vaccination policy']"
 										},
 										"sink": {
-											"name": "H7_Vaccination policy"
+											"name": "H7_Vaccination_policy"
 										}
 									},
 									{
@@ -1890,7 +1741,7 @@
 											"path": "$['H8_Protection of elderly people']"
 										},
 										"sink": {
-											"name": "H8_Protection of elderly people"
+											"name": "H8_Protection_of_elderly_people"
 										}
 									},
 									{
@@ -2578,8 +2429,7 @@
 				"lastPublishTime": "2023-11-09T18:35:52Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]",
-				"[concat(variables('factoryId'), '/datasets/VM_Date_Table')]"
+				"[concat(variables('factoryId'), '/datasets/VM_Metrics_Table')]"
 			]
 		},
 		{
